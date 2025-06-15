@@ -4,12 +4,14 @@
     <n-grid :cols="6" x-gap="16" y-gap="0" class="top-nav-cards">
       <n-gi v-for="item in navCardList" :key="item.title">
         <div class="nav-card">
-          <div class="nav-card-icon" :style="{ color: item.color }">
-            <n-icon size="28">
-              <component :is="item.icon" />
-            </n-icon>
+          <div class="nav-card-header">
+            <div class="nav-card-icon" :style="{ color: item.color }">
+              <n-icon size="16">
+                <component :is="item.icon" />
+              </n-icon>
+            </div>
+            <div class="nav-card-title">{{ item.title }}</div>
           </div>
-          <div class="nav-card-title">{{ item.title }}</div>
           <div class="nav-card-value">{{ item.value }}</div>
         </div>
       </n-gi>
@@ -449,22 +451,29 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    padding: 18px 0 10px 0;
+    padding: 14px 0;
     min-height: 80px;
     transition: box-shadow 0.2s;
   }
   .nav-card:hover {
     box-shadow: 0 4px 16px #00000014;
   }
-  .nav-card-icon {
-    font-size: 28px;
+  .nav-card-header {
+    display: flex;
+    align-items: center;
+    gap: 8px;
     margin-bottom: 8px;
+  }
+  .nav-card-icon {
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
   .nav-card-title {
     font-size: 15px;
     color: #555;
     font-weight: 500;
-    margin-bottom: 2px;
   }
   .nav-card-value {
     font-size: 18px;
