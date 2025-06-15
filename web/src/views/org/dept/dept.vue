@@ -97,7 +97,12 @@
             <n-space justify="end">
               <n-button type="primary" size="medium" @click="handleSearch">查询</n-button>
               <n-button size="medium" @click="handleReset">重置</n-button>
-              <n-button text type="primary" @click="toggleExpand" style="margin-left: 8px;margin-top: 10px">
+              <n-button
+                text
+                type="primary"
+                @click="toggleExpand"
+                style="margin-left: 8px; margin-top: 10px"
+              >
                 {{ isExpanded ? '收起' : '展开' }}
                 <n-icon :component="isExpanded ? ChevronUpOutline : ChevronDownOutline" />
               </n-button>
@@ -105,13 +110,13 @@
           </n-form-item-gi>
         </n-grid>
       </n-form>
-
+      <n-divider style="margin-bottom: 12px; margin-top: 0px" />
       <!-- 操作按钮 -->
-      <n-space class="action-btns" justify="end" size="small" style="margin-bottom: 10px">
+      <n-space justify="end" size="small" style="margin-bottom: 1%">
         <n-button type="primary" size="medium">一键移除封禁账号</n-button>
         <n-button size="medium">全部上线</n-button>
         <n-button size="medium">全部下载</n-button>
-        <n-button size="medium">导入账号</n-button>
+        <n-button size="medium" @click="handleExportAccount">导入账号</n-button>
         <n-button size="medium">批量标签</n-button>
         <n-button size="medium">导出账号</n-button>
         <n-button size="medium">上线</n-button>
@@ -119,6 +124,7 @@
         <n-button type="error" size="medium">移除</n-button>
       </n-space>
       <!-- 数据表格 -->
+
       <n-card class="table-card" :bordered="false" content-style="padding: 0;">
         <n-data-table
           size="small"
@@ -170,6 +176,9 @@
     WarningOutlined,
   } from '@vicons/antd';
   import { ChevronDownOutline, ChevronUpOutline } from '@vicons/ionicons5';
+  import { useRouter } from 'vue-router';
+
+  const router = useRouter();
 
   const searchForm = ref({
     account: '',
@@ -238,33 +247,54 @@
     };
   };
 
+  const handleExportAccount = () => {
+    router.push('/org/edit');
+  };
+
   const columns: DataTableColumn<any>[] = [
     { type: 'selection' },
     { title: 'ID', key: 'id', width: 80 },
-    { title: '账号', key: 'account', width: 150 },
+    {
+      title: '账号',
+      key: 'account',
+      width: 150,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
     {
       title: '标签',
       key: 'tag',
-      width: 100,
+      width: 200,
+      ellipsis: {
+        tooltip: true,
+      },
       render(row: any) {
-        return row.tag
-          ? h(
+        if (!row.tag || !row.tag.length) return '';
+        return h(
+          'div',
+          { style: { display: 'flex', gap: '4px', flexWrap: 'wrap' } },
+          row.tag.map((tag: string) =>
+            h(
               NTag,
               {
                 type: 'info',
                 size: 'small',
                 round: true,
-                style: { marginRight: '4px' },
               },
-              { default: () => row.tag }
+              { default: () => tag }
             )
-          : '';
+          )
+        );
       },
     },
     {
       title: '风控状态',
       key: 'riskStatus',
       width: 100,
+      ellipsis: {
+        tooltip: true,
+      },
       render(row: any) {
         if (row.riskStatus === '正常') {
           return h(
@@ -287,6 +317,9 @@
       title: '账号状态',
       key: 'accountStatus',
       width: 100,
+      ellipsis: {
+        tooltip: true,
+      },
       render(row: any) {
         if (row.accountStatus === '在线') {
           return h(
@@ -305,19 +338,61 @@
         }
       },
     },
-    { title: '总群发目标数', key: 'totalTarget', width: 120 },
-    { title: '今日群发目标数', key: 'todayTarget', width: 120 },
-    { title: 'IP分组', key: 'ipGroup', width: 100 },
-    { title: '账号版本', key: 'accountVersion', width: 100 },
-    { title: '上号时间', key: 'loginTime', width: 160 },
-    { title: '拉群时间', key: 'groupTime', width: 160 },
+    {
+      title: '总群发目标数',
+      key: 'totalTarget',
+      width: 120,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
+    {
+      title: '今日群发目标数',
+      key: 'todayTarget',
+      width: 120,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
+    {
+      title: 'IP分组',
+      key: 'ipGroup',
+      width: 200,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
+    {
+      title: '账号版本',
+      key: 'accountVersion',
+      width: 100,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
+    {
+      title: '上号时间',
+      key: 'loginTime',
+      width: 160,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
+    {
+      title: '拉群时间',
+      key: 'groupTime',
+      width: 160,
+      ellipsis: {
+        tooltip: true,
+      },
+    },
   ];
 
   const tableData = [
     {
       id: 1041517,
       account: '918799394559',
-      tag: 'JP群',
+      tag: ['JP群', 'VIP'],
       riskStatus: '-',
       accountStatus: '在线',
       totalTarget: 0,
@@ -405,9 +480,7 @@
   .filter-form {
     margin-bottom: 4px;
   }
-  .action-btns {
-    margin-bottom: 4px;
-  }
+
   .table-card {
     border-radius: 8px;
     overflow: hidden;
@@ -435,7 +508,7 @@
     display: flex;
     justify-content: flex-end;
     padding: 0;
-    margin: 0;
+    margin-right: 10px;
     margin-top: -24px;
   }
 

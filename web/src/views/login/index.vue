@@ -6,7 +6,7 @@
         <header class="justify-between">
           <n-space justify="center">
             <div></div>
-            <img src="~@/assets/images/logo.png" class="account-logo" alt="" />
+            <img src="~@/assets/icons/superhero.svg" class="account-logo" alt="" />
             <n-gradient-text type="primary" :size="26">{{ projectName }}</n-gradient-text>
             <div></div>
           </n-space>
