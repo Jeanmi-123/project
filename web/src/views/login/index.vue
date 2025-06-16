@@ -16,7 +16,7 @@
             <transition name="fade-slide" appear>
               <component
                 :is="activeModule.component"
-                @updateActiveModule="handleUpdateActiveModule"
+                @update-active-module="handleUpdateActiveModule"
               />
             </transition>
           </div>
@@ -161,8 +161,9 @@
   }
 
   .transition {
-    transition-property: color, background-color, border-color, outline-color, text-decoration-color,
-      fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter;
+    transition-property:
+      color, background-color, border-color, outline-color, text-decoration-color, fill, stroke,
+      opacity, box-shadow, transform, filter, backdrop-filter;
     transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
     transition-duration: 0.15s;
   }

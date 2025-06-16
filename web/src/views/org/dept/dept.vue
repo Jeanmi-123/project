@@ -250,7 +250,7 @@
   };
 
   const handleExportAccount = () => {
-    router.push('/org/edit');
+    router.push('/org/dept/edit');
   };
 
   const columns: DataTableColumn<any>[] = [
@@ -493,6 +493,7 @@
   .table-card {
     border-radius: 8px;
     overflow: hidden;
+    margin-bottom: 20px;
   }
   .custom-table {
     border-radius: 8px;

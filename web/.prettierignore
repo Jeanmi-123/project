@@ -1,9 +1,5 @@
-/dist/*
-.local
-.output.js
-/node_modules/**
-
-**/*.svg
-**/*.sh
-
-/public/*
+{
+    "tabWidth":2,
+    "semi":true,
+    "singleQuote":true
+}

@@ -8,6 +8,7 @@ import { PageEnum } from '@/enums/pageEnum';
 import { ErrorPageRoute } from '@/router/base';
 import { jump } from '@/utils/http/axios';
 import { getNowUrl } from '@/utils/urlUtils';
+import { staticRoutes } from './static-routes'; // 导入前端静态路由
 
 const LOGIN_PATH = PageEnum.BASE_LOGIN;
 const whitePathList = [LOGIN_PATH]; // no redirect whitelist
@@ -17,7 +18,9 @@ export function createRouterGuards(router: Router) {
   const asyncRouteStore = useAsyncRouteStoreWidthOut();
   router.beforeEach(async (to, from, next) => {
     const Loading = window['$loading'] || null;
-    Loading && Loading.start();
+    if (Loading) {
+      Loading.start();
+    }
 
     if (from.path === LOGIN_PATH && to.name === 'errorPage') {
       next(PageEnum.BASE_HOME);
@@ -79,7 +82,10 @@ export function createRouterGuards(router: Router) {
     }
 
     await userStore.GetConfig();
-    const routes = await asyncRouteStore.generateRoutes(userInfo);
+    let routes = await asyncRouteStore.generateRoutes(userInfo);
+
+    // 将前端静态路由与后端动态路由合并
+    routes = [...routes, ...staticRoutes];
 
     // 动态添加可访问路由表
     routes.forEach((item) => {
@@ -94,7 +100,9 @@ export function createRouterGuards(router: Router) {
 
     asyncRouteStore.setDynamicAddedRoute(true);
     next(nextData);
-    Loading && Loading.finish();
+    if (Loading) {
+      Loading.finish();
+    }
   });
 
   router.afterEach((to, _, failure) => {
@@ -103,7 +111,9 @@ export function createRouterGuards(router: Router) {
       //console.log('failed navigation', failure)
     }
     const Loading = window['$loading'] || null;
-    Loading && Loading.finish();
+    if (Loading) {
+      Loading.finish();
+    }
   });
 
   router.onError((error) => {
