@@ -30,7 +30,6 @@
   import { ref, computed, onMounted } from 'vue';
   import type { Component } from 'vue';
   import LoginFrom from './login/index.vue';
-  import RegisterFrom from './register/index.vue';
   import { useRouter } from 'vue-router';
   import { useUserStore } from '@/store/modules/user';
 
@@ -50,12 +49,7 @@
     component: LoginFrom,
   });
 
-  const modules: LoginModule[] = [
-    { key: 'login', label: '账号登录', component: LoginFrom },
-    // { key: 'register', label: '注册账号', component: RegisterFrom },
-    // { key: 'reset-pwd', label: '重置密码', component: ResetPwd },
-    // { key: 'bind-wechat', label: '绑定微信', component: BindWechat }
-  ];
+  const modules: LoginModule[] = [{ key: 'login', label: '账号登录', component: LoginFrom }];
 
   const containerCSS = computed(() => {
     const val = document.body.clientWidth;
@@ -78,14 +72,6 @@
   }
 
   onMounted(() => {
-    //是否开放注册
-    if (userStore.loginConfig?.loginRegisterSwitch === 1) {
-      const findItem = modules.find((item) => item.key === 'register');
-      if (!findItem) {
-        modules.push({ key: 'register', label: '注册账号', component: RegisterFrom });
-      }
-    }
-
     const key = router.currentRoute.value.query?.scope as string;
     if (key) {
       handleUpdateActiveModule(key);

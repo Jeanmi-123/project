@@ -45,43 +45,6 @@
       </n-input>
     </n-form-item>
 
-    <n-form-item path="mobile">
-      <n-input
-        @keyup.enter="handleSubmit"
-        v-model:value="formInline.mobile"
-        placeholder="请输入手机号码"
-      >
-        <template #prefix>
-          <n-icon size="18" color="#808695">
-            <MobileOutlined />
-          </n-icon>
-        </template>
-      </n-input>
-    </n-form-item>
-
-    <n-form-item path="code">
-      <n-input-group>
-        <n-input
-          @keyup.enter="handleSubmit"
-          v-model:value="formInline.code"
-          placeholder="请输入验证码"
-        >
-          <template #prefix>
-            <n-icon size="18" color="#808695" :component="SafetyCertificateOutlined" />
-          </template>
-        </n-input>
-        <n-button
-          type="primary"
-          ghost
-          @click="sendMobileCode"
-          :disabled="isCounting"
-          :loading="sendLoading"
-        >
-          {{ sendLabel }}
-        </n-button>
-      </n-input-group>
-    </n-form-item>
-
     <n-form-item path="inviteCode">
       <n-input
         :style="{ width: '100%' }"
@@ -103,13 +66,10 @@
         @click-policy="handleClickPolicy"
       />
     </n-form-item>
-    <n-form-item>
-      <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
-        注册
-      </n-button>
-    </n-form-item>
 
-    <FormOther moduleKey="login" tag="登录账号" @update-active-module="updateActiveModule" />
+    <n-button type="primary" @click="handleSubmit" size="large" :loading="loading" block>
+      注册
+    </n-button>
   </n-form>
 
   <n-modal
@@ -148,7 +108,7 @@
   import { SafetyCertificateOutlined, MobileOutlined, TagOutlined } from '@vicons/antd';
   import { aesEcb } from '@/utils/encrypt';
   import Agreement from './agreement.vue';
-  import FormOther from '../components/form-other.vue';
+
   import { useSendCode } from '@/hooks/common';
   import { validate } from '@/utils/validateUtil';
   import { register, SendSms } from '@/api/system/user';
