@@ -10,12 +10,22 @@ export const staticRoutes: Array<RouteRecordRaw> = [
     name: 'OrgDeptEdit',
     component: Layout,
     meta: {
-      title: '账号编辑',
+      title: '组织管理',
       ignoreAuth: false, // 如果这个页面不需要登录就能访问，可以设置为true
     },
     children: [
       {
-        path: '',
+        path: '/org/dept',
+        redirect: '',
+        component: '/org/dept/dept',
+        meta: {
+          title: '部门管理',
+          sort: 20,
+          type: 2,
+        },
+      },
+      {
+        path: '/org/dept/edit',
         name: 'OrgDeptEditPage',
         component: () => import('@/views/org/dept/edit.vue'), // 请替换为您的实际组件路径
         meta: {

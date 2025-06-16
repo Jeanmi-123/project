@@ -115,15 +115,63 @@
       <n-divider style="margin-bottom: 12px; margin-top: 0px" />
       <!-- 操作按钮 -->
       <n-space justify="end" size="small" style="margin-bottom: 1%">
-        <n-button type="primary" size="medium">一键移除封禁账号</n-button>
-        <n-button size="medium">全部上线</n-button>
-        <n-button size="medium">全部下载</n-button>
-        <n-button size="medium" @click="handleExportAccount">导入账号</n-button>
-        <n-button size="medium">批量标签</n-button>
-        <n-button size="medium">导出账号</n-button>
-        <n-button size="medium">上线</n-button>
-        <n-button size="medium">下线</n-button>
-        <n-button type="error" size="medium">移除</n-button>
+        <n-button type="primary" size="medium">
+          <template #icon>
+            <n-icon>
+              <StopOutlined />
+            </n-icon>
+          </template>
+          一键移除封禁账号
+        </n-button>
+        <n-button size="medium">
+          <template #icon>
+            <n-icon>
+              <ArrowUpOutlined />
+            </n-icon>
+          </template>
+          全部上线
+        </n-button>
+        <n-button size="medium">
+          <template #icon>
+            <n-icon>
+              <DownloadOutlined />
+            </n-icon>
+          </template>
+          全部下载
+        </n-button>
+        <n-button size="medium" @click="handleExportAccount">
+          <template #icon>
+            <n-icon>
+              <UploadOutlined />
+            </n-icon>
+          </template>
+          导入账号
+        </n-button>
+        <n-button size="medium">
+          <template #icon>
+            <n-icon>
+              <ExportOutlined />
+            </n-icon>
+          </template>
+          导出账号
+        </n-button>
+        <n-button size="medium">
+          <template #icon>
+            <n-icon>
+              <TagOutlined />
+            </n-icon>
+          </template>
+          批量标签
+        </n-button>
+
+        <n-button type="error" size="medium">
+          <template #icon>
+            <n-icon>
+              <DeleteOutlined />
+            </n-icon>
+          </template>
+          移除
+        </n-button>
       </n-space>
       <!-- 数据表格 -->
 
@@ -167,8 +215,8 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, h } from 'vue';
-  import { NTag, NIcon, type DataTableColumn } from 'naive-ui';
+  import { ref, h, reactive } from 'vue';
+  import { NTag, NIcon, type DataTableColumn, NSpace, NButton } from 'naive-ui';
   import {
     UserOutlined,
     CheckCircleOutlined,
@@ -176,9 +224,17 @@
     StopOutlined,
     ClockCircleOutlined,
     WarningOutlined,
+    DeleteOutlined,
+    ArrowUpOutlined,
+    DownloadOutlined,
+    UploadOutlined,
+    TagOutlined,
+    ExportOutlined,
+    ArrowDownOutlined,
   } from '@vicons/antd';
   import { ChevronDownOutline, ChevronUpOutline } from '@vicons/ionicons5';
   import { useRouter } from 'vue-router';
+  import { TableAction } from '@/components/Table';
 
   const router = useRouter();
 
@@ -253,6 +309,53 @@
     router.push('/org/dept/edit');
   };
 
+  const handleOnlineAccount = (row) => {
+    console.log('上线', row);
+    // 这里可以添加单个账号上线的逻辑
+  };
+
+  const handleOfflineAccount = (row) => {
+    console.log('下线', row);
+    // 这里可以添加单个账号下线的逻辑
+  };
+
+  const handleRemoveAccount = (row) => {
+    console.log('移除', row);
+    // 这里可以添加单个账号移除的逻辑
+  };
+
+  const actionColumn = reactive({
+    width: 250,
+    title: '操作',
+    key: 'actions',
+    fixed: 'right' as const,
+    render(record) {
+      return h(TableAction as any, {
+        style: 'button',
+        actions: [
+          {
+            label: '上线',
+            icon: ArrowUpOutlined,
+            type: 'default',
+            onClick: handleOnlineAccount.bind(null, record),
+          },
+          {
+            label: '下线',
+            icon: ArrowDownOutlined,
+            type: 'default',
+            onClick: handleOfflineAccount.bind(null, record),
+          },
+          {
+            label: '移除',
+            icon: DeleteOutlined,
+            type: 'error',
+            onClick: handleRemoveAccount.bind(null, record),
+          },
+        ],
+      });
+    },
+  });
+
   const columns: DataTableColumn<any>[] = [
     { type: 'selection' },
     { title: 'ID', key: 'id', width: 80 },
@@ -298,13 +401,13 @@
         tooltip: true,
       },
       render(row: any) {
-        if (row.riskStatus === '正常') {
+        if (row.riskStatus === 0) {
           return h(
             NTag,
             { type: 'success', size: 'small', round: true },
             { default: () => '正常' }
           );
-        } else if (row.riskStatus === '风控') {
+        } else if (row.riskStatus === 1) {
           return h(
             NTag,
             { type: 'warning', size: 'small', round: true },
@@ -323,15 +426,15 @@
         tooltip: true,
       },
       render(row: any) {
-        if (row.accountStatus === '在线') {
+        if (row.accountStatus === 0) {
           return h(
             NTag,
             { type: 'success', size: 'small', round: true },
             { default: () => '在线' }
           );
-        } else if (row.accountStatus === '离线') {
+        } else if (row.accountStatus === 1) {
           return h(NTag, { type: 'error', size: 'small', round: true }, { default: () => '离线' });
-        } else if (row.accountStatus === '封禁') {
+        } else if (row.accountStatus === 2) {
           return h(
             NTag,
             { type: 'warning', size: 'small', round: true },
@@ -388,6 +491,7 @@
         tooltip: true,
       },
     },
+    actionColumn,
   ];
 
   const tableData = [
@@ -395,14 +499,27 @@
       id: 1041517,
       account: '918799394559',
       tag: ['JP群', 'VIP'],
-      riskStatus: '-',
-      accountStatus: '在线',
+      riskStatus: 0,
+      accountStatus: 0,
       totalTarget: 0,
       todayTarget: 0,
       ipGroup: '活动动IP(随机)',
       accountVersion: '单用户个人',
       loginTime: '2025-06-11 12:47:36',
-      groupTime: '',
+      groupTime: '2025-06-11 12:47:36',
+    },
+    {
+      id: 1041517,
+      account: '918799394559',
+      tag: ['JP群', 'VIP'],
+      riskStatus: 1,
+      accountStatus: 1,
+      totalTarget: 0,
+      todayTarget: 0,
+      ipGroup: '活动动IP(随机)',
+      accountVersion: '单用户个人',
+      loginTime: '2025-06-11 12:47:36',
+      groupTime: '2025-06-11 12:47:36',
     },
     // ... 你可以继续添加更多数据
   ];
@@ -519,7 +636,6 @@
     justify-content: flex-end;
     padding: 0;
     margin-right: 10px;
-    margin-top: -24px;
   }
 
   .expand-button {

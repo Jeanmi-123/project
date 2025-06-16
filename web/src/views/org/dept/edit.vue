@@ -4,14 +4,15 @@
       class="dept-edit-card"
       :bordered="false"
       title="账号编辑"
-      content-style="padding: 12px 12px 0 12px;"
+      content-style="padding: 24px 30px 0 30px;"
     >
       <n-form
         ref="formRef"
         :model="formValue"
         :rules="rules"
         label-placement="left"
-        :label-width="80"
+        :label-width="100"
+        style="max-width: 89%; margin: 0 auto"
       >
         <n-form-item label="备注" path="remarks">
           <n-input
@@ -44,15 +45,49 @@
             <n-radio value="android_business">安卓商业</n-radio>
           </n-radio-group>
         </n-form-item>
-        <n-divider style="margin-bottom: 12px; margin-top: 0px" />
-        <div style="margin-bottom: 20px">
-          <n-space justify="end">
-            <n-button type="primary" @click="handleSubmit">保存</n-button>
-            <n-button @click="handleCancel">取消</n-button>
-          </n-space>
-        </div>
+
+        <n-form-item label="拖拽上传" path="files">
+          <n-upload
+            v-model:file-list="formValue.files"
+            multiple
+            :max="1"
+            :default-upload="false"
+            accept=".txt"
+            class="custom-upload"
+          >
+            <n-upload-dragger>
+              <div style="margin-bottom: 12px">
+                <n-icon size="48" :depth="3">
+                  <UploadOutlined />
+                </n-icon>
+              </div>
+              <n-text style="font-size: 16px"> 点击或者拖动文件到该区域来上传 </n-text>
+              <n-p depth="3" style="margin: 8px 0 0 0"> 文件格式XXXXXXXXX </n-p>
+            </n-upload-dragger>
+          </n-upload>
+        </n-form-item>
       </n-form>
+      <n-divider style="margin-bottom: 12px; margin-top: 0px" />
+      <div style="margin-bottom: 20px">
+        <n-space justify="end">
+          <n-button type="primary" @click="handleViewHistory" class="mr-2"
+            >点击查看历史导入</n-button
+          >
+          <n-button type="primary" @click="handleSubmit">保存</n-button>
+          <n-button @click="handleCancel">取消</n-button>
+        </n-space>
+      </div>
     </n-card>
+
+    <n-modal
+      v-model:show="showHistoryModal"
+      :show-icon="false"
+      preset="dialog"
+      style="width: 920px"
+      :mask-closable="false"
+    >
+      <historyList />
+    </n-modal>
   </div>
 </template>
 
@@ -60,16 +95,20 @@
   import { ref, reactive } from 'vue';
   import { FormInst, useMessage } from 'naive-ui';
   import { useRouter } from 'vue-router';
+  import { UploadOutlined } from '@vicons/antd';
+  import historyList from './components/historyList.vue';
 
   const formRef = ref<FormInst | null>(null);
   const message = useMessage();
   const router = useRouter();
+  const showHistoryModal = ref(false); // 控制弹框显示隐藏
 
   const formValue = reactive({
     remarks: '',
     tags: [],
     group: null,
-    accountVersion: 'android', // 默认选中安卓
+    accountVersion: 'android',
+    files: [], // 添加文件列表
   });
 
   // 示例选项数据
@@ -93,9 +132,13 @@
       trigger: ['blur', 'input'],
     },
     tags: {
-      type: 'array',
       required: true,
-      message: '请选择至少一个标签',
+      validator: (rule, value) => {
+        if (!value || value.length === 0) {
+          return new Error('请选择至少一个标签');
+        }
+        return true;
+      },
       trigger: 'change',
     },
     group: {
@@ -108,12 +151,40 @@
       message: '请选择账号版本',
       trigger: 'change',
     },
+    files: {
+      required: true,
+      validator: (rule, value) => {
+        if (!value || value.length === 0) {
+          return new Error('请上传文件');
+        }
+        return true;
+      },
+      trigger: 'change',
+    },
+  };
+
+  const handleViewHistory = () => {
+    // message.info('查看历史导入功能待实现'); // Replace with modal logic
+    showHistoryModal.value = true;
   };
 
   const handleSubmit = (e: MouseEvent) => {
     e.preventDefault();
     formRef.value?.validate((errors) => {
       if (!errors) {
+        // 处理文件上传
+        const formData = new FormData();
+        formValue.files.forEach((file: any) => {
+          formData.append('files[]', file.file);
+        });
+
+        // 添加其他表单数据
+        Object.keys(formValue).forEach((key) => {
+          if (key !== 'files') {
+            formData.append(key, JSON.stringify(formValue[key]));
+          }
+        });
+
         message.success('表单验证通过，准备提交数据！');
         console.log('Form Data:', formValue);
         // 在这里执行表单提交逻辑，例如调用API
@@ -127,7 +198,6 @@
   };
 
   const handleCancel = () => {
-    message.info('取消操作');
     router.back(); // 返回上一页
   };
 </script>
@@ -140,7 +210,54 @@
 
   .dept-edit-card {
     border-radius: 6px;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05); /* 与 dept.vue 中的 box-shadow 统一 */
-    margin-bottom: 10px; /* 添加与 main-card 类似的底部边距 */
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
+    margin-bottom: 10px;
+  }
+
+  .custom-upload {
+    margin: 0 auto;
+
+    :deep(.n-upload-dragger) {
+      width: 100%;
+      height: 200px;
+      border: 2px dashed #cccccc;
+      border-radius: 8px;
+      transition: all 0.3s;
+      background: #fafafa;
+
+      &:hover {
+        border-color: #409eff;
+        background: #f4faff;
+      }
+    }
+
+    // Hide the file list if only one file is allowed and no image-card type
+    :deep(.n-upload-file-list) {
+      display: none;
+    }
+  }
+
+  .upload-trigger {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    padding: 20px;
+    text-align: center;
+  }
+
+  .upload-icon {
+    color: #c0c0c0;
+    margin-bottom: 8px;
+  }
+
+  .upload-text {
+    font-size: 14px;
+    color: #808080;
+  }
+
+  .upload-hint {
+    display: none;
   }
 </style>
