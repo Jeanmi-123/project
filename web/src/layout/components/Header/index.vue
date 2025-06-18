@@ -69,6 +69,12 @@
       </n-breadcrumb>
     </div>
     <div class="layout-header-right">
+      <!-- 用户余额展示 -->
+      <div class="user-balance-box">
+        <span class="balance-label">用户余额：</span>
+        <span class="balance-value">205.130 USDT</span>
+        <span class="balance-action">充值</span>
+      </div>
       <!--      <div-->
       <!--        class="layout-header-trigger layout-header-trigger-min"-->
       <!--        v-for="item in iconList"-->
@@ -122,23 +128,16 @@
           </n-tooltip>
         </div>
       </div>
-      <!--切换全屏-->
-      <div class="layout-header-trigger layout-header-trigger-min">
-        <n-tooltip placement="bottom">
-          <template #trigger>
-            <n-icon size="18">
-              <component :is="fullscreenIcon" @click="toggleFullScreen" />
-            </n-icon>
-          </template>
-          <span>全屏</span>
-        </n-tooltip>
-      </div>
+
       <!-- 个人中心 -->
       <div class="layout-header-trigger layout-header-trigger-min">
         <n-dropdown trigger="click" @select="avatarSelect" :options="avatarOptions" show-arrow>
           <div class="avatar">
             <n-avatar v-if="userStore.avatar" round :size="30" :src="userStore.avatar" />
-            <n-avatar v-else round :size="30">{{ userStore.realName }}</n-avatar>
+            <!-- <n-avatar v-else round :size="30">{{ userStore.realName }}</n-avatar> -->
+            <span class="username-display"
+              >{{ userStore.info?.username }}<br />{{ userStore?.info?.roleName }}</span
+            >
           </div>
         </n-dropdown>
       </div>
@@ -317,25 +316,6 @@
         });
       };
 
-      // 切换全屏图标
-      const toggleFullscreenIcon = () =>
-        (state.fullscreenIcon =
-          document.fullscreenElement !== null ? 'FullscreenExitOutlined' : 'FullscreenOutlined');
-
-      // 监听全屏切换事件
-      document.addEventListener('fullscreenchange', toggleFullscreenIcon);
-
-      // 全屏切换
-      const toggleFullScreen = () => {
-        if (!document.fullscreenElement) {
-          document.documentElement.requestFullscreen();
-        } else {
-          if (document.exitFullscreen) {
-            document.exitFullscreen();
-          }
-        }
-      };
-
       // 图标列表
       const iconList = [
         {
@@ -347,7 +327,9 @@
         },
       ];
 
-      function renderCustomHeader() {
+      const renderCustomHeader = () => {
+        const username = userStore?.info?.username;
+        const roleName = userStore?.info?.roleName;
         return h(
           'div',
           {
@@ -355,23 +337,21 @@
           },
           [
             h('div', null, [
-              h('div', null, [
-                h(NText, { depth: 2 }, { default: () => userStore?.info?.username }),
-              ]),
+              h('div', null, [h(NText, { depth: 2 }, { default: () => '@' + username })]),
               h('div', { style: 'font-size: 12px;' }, [
-                h(NText, { depth: 3 }, { default: () => userStore?.info?.roleName }),
+                h(NText, { depth: 3 }, { default: () => roleName }),
               ]),
             ]),
           ]
         );
-      }
+      };
 
       const avatarOptions = [
-        {
-          key: 'header',
-          type: 'render',
-          render: renderCustomHeader,
-        },
+        // {
+        //   key: 'header',
+        //   type: 'render',
+        //   render: renderCustomHeader,
+        // },
         {
           type: 'divider',
           key: 'd1',
@@ -484,7 +464,6 @@
       return {
         ...toRefs(state),
         iconList,
-        toggleFullScreen,
         doLogout,
         route,
         dropdownSelect,
@@ -570,6 +549,12 @@
         display: flex;
         align-items: center;
         height: 64px;
+
+        .username-display {
+          margin-left: 8px; /* 根据您的UI需要调整 */
+          color: #515a6e; /* 调整为您想要的颜色 */
+          font-size: 13px; /* 调整为您想要的字体大小 */
+        }
       }
 
       > * {
@@ -684,5 +669,32 @@
 
   :deep(sup) {
     top: 1.3em;
+  }
+
+  .user-balance-box {
+    display: flex;
+    align-items: center;
+    margin-right: 32px;
+
+    font-weight: 500;
+    .balance-label {
+      color: #666;
+
+      margin-right: 4px;
+    }
+    .balance-value {
+      color: @primaryColor;
+      font-weight: bold;
+
+      margin-right: 18px;
+    }
+    .balance-action {
+      color: @primaryColor;
+      cursor: pointer;
+      transition: text-decoration 0.2s;
+      &:hover {
+        text-decoration: underline;
+      }
+    }
   }
 </style>

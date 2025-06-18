@@ -19,100 +19,15 @@
 
     <n-card class="main-card" :bordered="false" content-style="padding: 12px 12px 0 12px;">
       <!-- 筛选表单 -->
-      <n-form :model="searchForm" class="filter-form" size="small">
-        <n-grid :cols="24" :x-gap="10" style="width: 100%">
-          <n-form-item-gi span="6" label="账号">
-            <n-input
-              v-model:value="searchForm.account"
-              placeholder="请输入账号"
-              clearable
-              size="medium"
-            />
-          </n-form-item-gi>
-          <n-form-item-gi span="6" label="风控状态">
-            <n-select
-              v-model:value="searchForm.riskStatus"
-              :options="riskStatusOptions"
-              clearable
-              placeholder="请选择风控状态"
-              size="medium"
-            />
-          </n-form-item-gi>
+      <BasicForm
+        @register="register"
+        @submit="reloadTable"
+        @reset="resetFields"
+        @keyup.enter="reloadTable"
+      />
+     
+     
 
-          <n-form-item-gi span="6" label="账号状态">
-            <n-select
-              v-model:value="searchForm.accountStatus"
-              :options="accountStatusOptions"
-              clearable
-              placeholder="请选择账号状态"
-              size="medium"
-            />
-          </n-form-item-gi>
-          <template v-if="isExpanded">
-            <n-form-item-gi span="6" label="IP分组">
-              <n-select
-                v-model:value="searchForm.ipGroup"
-                :options="ipGroupOptions"
-                clearable
-                placeholder="请选择IP分组"
-                size="medium"
-              />
-            </n-form-item-gi>
-            <n-form-item-gi span="6" label="账号版本">
-              <n-select
-                v-model:value="searchForm.accountVersion"
-                :options="accountVersionOptions"
-                clearable
-                placeholder="请选择账号版本"
-                size="medium"
-              />
-            </n-form-item-gi>
-            <n-form-item-gi span="6" label="标签">
-              <n-select
-                v-model:value="searchForm.tag"
-                :options="tagOptions"
-                clearable
-                placeholder="请选择标签"
-                size="medium"
-              />
-            </n-form-item-gi>
-            <n-form-item-gi span="6" label="是否设置头像">
-              <n-select
-                v-model:value="searchForm.hasAvatar"
-                :options="yesNoOptions"
-                clearable
-                placeholder="请选择"
-                size="medium"
-              />
-            </n-form-item-gi>
-            <n-form-item-gi span="6" label="是否重新注册">
-              <n-select
-                v-model:value="searchForm.isReRegister"
-                :options="yesNoOptions"
-                clearable
-                placeholder="请选择"
-                size="medium"
-              />
-            </n-form-item-gi>
-          </template>
-          <n-form-item-gi :span="isExpanded ? 24 : 6" class="search-buttons-item">
-            <n-space justify="end">
-              <n-button type="primary" size="medium" @click="handleSearch">查询</n-button>
-              <n-button size="medium" @click="handleReset">重置</n-button>
-              <n-button
-                text
-                type="primary"
-                @click="toggleExpand"
-                style="margin-left: 8px; margin-top: 10px"
-              >
-                {{ isExpanded ? '收起' : '展开' }}
-                <n-icon :component="isExpanded ? ChevronUpOutline : ChevronDownOutline" />
-              </n-button>
-            </n-space>
-          </n-form-item-gi>
-        </n-grid>
-      </n-form>
-      <n-divider style="margin-bottom: 12px; margin-top: 0px" />
       <!-- 操作按钮 -->
       <n-space justify="end" size="small" style="margin-bottom: 1%">
         <n-button type="primary" size="medium">
@@ -173,21 +88,31 @@
           移除
         </n-button>
       </n-space>
+      <n-divider style="margin-bottom: 12px; margin-top: 0px" />
       <!-- 数据表格 -->
 
-      <n-card class="table-card" :bordered="false" content-style="padding: 0;">
-        <n-data-table
-          size="small"
-          :columns="columns"
-          :data="tableData"
-          :pagination="pagination"
-          :row-key="(row) => row.id"
-          :bordered="false"
-          :scroll-x="1200"
-          class="custom-table"
-          :row-class-name="rowClassName"
-        />
-      </n-card>
+      <BasicTable
+        :columns="columns"
+        :request="loadDataTable"
+        :row-key="(row) => row.id"
+        :actionColumn="actionColumn"
+        :scroll-x="scrollX"
+        :resizeHeightOffset="-10000"
+        size="small"
+        :pagination="pagination"
+        :row-class-name="rowClassName"
+        ref="actionRef"
+        :openChecked="true"
+        @update:checked-row-keys="onCheckedRow"
+        :checked-row-keys="checkedIds"
+      >
+        <template #tableTitle>
+          <n-space>
+            <span>已选择 {{ checkedIds.length }} 项</span>
+            <n-button text type="primary" @click="clearChecked">清空</n-button>
+          </n-space>
+        </template></BasicTable
+      >
     </n-card>
 
     <n-modal
@@ -234,27 +159,10 @@
   } from '@vicons/antd';
   import { ChevronDownOutline, ChevronUpOutline } from '@vicons/ionicons5';
   import { useRouter } from 'vue-router';
-  import { TableAction } from '@/components/Table';
+  import { TableAction, BasicTable } from '@/components/Table';
+  import { BasicForm, useForm } from '@/components/Form/index';
 
   const router = useRouter();
-
-  const searchForm = ref({
-    account: '',
-    riskStatus: null,
-    accountStatus: null,
-    ipGroup: null,
-    accountVersion: null,
-    tag: null,
-    hasAvatar: null,
-    isReRegister: null,
-  });
-
-  const isExpanded = ref(false);
-
-  const toggleExpand = () => {
-    isExpanded.value = !isExpanded.value;
-  };
-
   // 统计数据变量
   const statTotal = ref(1008);
   const statOnline = ref(701);
@@ -288,9 +196,101 @@
     { label: '是', value: 'true' },
     { label: '否', value: 'false' },
   ];
+  const [register, { resetFields }] = useForm({
+    gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
+    labelWidth: 80,
+    schemas: [
+      {
+        field: 'account',
+        component: 'NInput',
+        label: '账号',
+        componentProps: {
+          placeholder: '请输入账号',
+          clearable: true,
+        },
+      },
+      {
+        field: 'riskStatus',
+        component: 'NSelect',
+        label: '风控状态',
+        componentProps: {
+          placeholder: '请选择风控状态',
+          options: riskStatusOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'accountStatus',
+        component: 'NSelect',
+        label: '账号状态',
+        componentProps: {
+          placeholder: '请选择账号状态',
+          options: accountStatusOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'ipGroup',
+        component: 'NSelect',
+        label: 'IP分组',
+        componentProps: {
+          placeholder: '请选择IP分组',
+          options: ipGroupOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'accountVersion',
+        component: 'NSelect',
+        label: '账号版本',
+        componentProps: {
+          placeholder: '请选择账号版本',
+          options: accountVersionOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'tag',
+        component: 'NSelect',
+        label: '标签',
+        componentProps: {
+          placeholder: '请选择标签',
+          options: tagOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'hasAvatar',
+        component: 'NSelect',
+        label: '是否设置头像',
+        componentProps: {
+          placeholder: '请选择',
+          options: yesNoOptions,
+          clearable: true,
+        },
+      },
+      {
+        field: 'isReRegister',
+        component: 'NSelect',
+        label: '是否重新注册',
+        componentProps: {
+          placeholder: '请选择',
+          options: yesNoOptions,
+          clearable: true,
+        },
+      },
+    ],
+  });
+
+  const isExpanded = ref(false);
+  const scrollX = ref(1500);
+
+  const toggleExpand = () => {
+    isExpanded.value = !isExpanded.value;
+  };
 
   const handleSearch = () => {
-    // 查询逻辑
+    reloadTable();
   };
   const handleReset = () => {
     searchForm.value = {
@@ -303,6 +303,7 @@
       hasAvatar: null,
       isReRegister: null,
     };
+    reloadTable();
   };
 
   const handleExportAccount = () => {
@@ -327,8 +328,8 @@
   const actionColumn = reactive({
     width: 250,
     title: '操作',
-    key: 'actions',
-    fixed: 'right' as const,
+    key: 'action',
+    fixed: 'right',
     render(record) {
       return h(TableAction as any, {
         style: 'button',
@@ -358,11 +359,12 @@
 
   const columns: DataTableColumn<any>[] = [
     { type: 'selection' },
-    { title: 'ID', key: 'id', width: 80 },
+    { title: 'ID', key: 'id', width: 80, fixed: 'left' },
     {
       title: '账号',
       key: 'account',
       width: 150,
+      fixed: 'left',
       ellipsis: {
         tooltip: true,
       },
@@ -524,12 +526,19 @@
     // ... 你可以继续添加更多数据
   ];
 
-  const pagination = {
+  const pagination = reactive({
     page: 1,
     pageSize: 10,
     showSizePicker: true,
     pageSizes: [10, 20, 30, 40],
-  };
+    onChange: (page) => {
+      pagination.page = page;
+    },
+    onUpdatePageSize: (pageSize) => {
+      pagination.pageSize = pageSize;
+      pagination.page = 1;
+    },
+  });
 
   const navCardList = [
     { title: '账号总数', icon: UserOutlined, color: '#36a3f7', value: statTotal.value },
@@ -549,6 +558,36 @@
   // 表格行样式
   const rowClassName = (row: any) => {
     return row.index % 2 === 1 ? 'table-row-even' : '';
+  };
+
+  // 新增清空选中项的方法
+  const checkedIds = ref<number[]>([]);
+  const clearChecked = () => {
+    checkedIds.value = [];
+  };
+
+  const onCheckedRow = (rowKeys) => {
+    checkedIds.value = rowKeys;
+  };
+
+  // 添加数据加载函数
+  const loadDataTable = async (params) => {
+    // 这里替换为实际的API调用
+    console.log('Loading data with params:', params);
+    return {
+      list: tableData,
+      pageNum: pagination.page,
+      pageSize: pagination.pageSize,
+      total: tableData.length,
+    };
+  };
+
+  // 添加表格引用
+  const actionRef = ref();
+
+  // 添加刷新表格方法
+  const reloadTable = () => {
+    actionRef.value?.reload();
   };
 </script>
 
