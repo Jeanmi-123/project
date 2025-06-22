@@ -1,6 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5">
-    <n-card :bordered="false" class="rounded-xl shadow p-8" title="充值">
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-2">
+    <n-card :bordered="false" class="rounded-xl shadow" title="充值">
       <n-steps :current="1" class="mb-8 pl-[20%]" size="medium">
         <n-step title="创建充值订单" />
         <n-step title="充值订单消息" />

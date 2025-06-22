@@ -1,33 +1,46 @@
 <template>
-  <div class="account-manage-page">
+  <div class="min-h-screen bg-gray-50 py-4 px-2">
     <!-- 顶部横向卡片导航（有数字） -->
-    <n-grid :cols="6" x-gap="16" y-gap="0" class="top-nav-cards">
+    <n-grid :cols="6" x-gap="16" y-gap="0" class="mb-4">
       <n-gi v-for="item in navCardList" :key="item.title">
-        <div class="nav-card">
-          <div class="nav-card-header">
-            <div class="nav-card-icon" :style="{ color: item.color }">
+        <div
+          class="bg-white rounded-lg shadow flex flex-col items-center justify-center py-3 min-h-[80px] transition-shadow hover:shadow-lg"
+        >
+          <div class="flex items-center gap-2 mb-2">
+            <div :style="{ color: item.color }">
               <n-icon size="16">
                 <component :is="item.icon" />
               </n-icon>
             </div>
-            <div class="nav-card-title">{{ item.title }}</div>
+            <div class="text-base text-gray-600 font-medium">{{ item.title }}</div>
           </div>
-          <div class="nav-card-value">{{ item.value }}</div>
+          <div class="text-lg font-bold text-gray-900">{{ item.value }}</div>
         </div>
       </n-gi>
     </n-grid>
 
-    <n-card class="main-card" :bordered="false" content-style="padding: 12px 12px 0 12px;">
+    <n-card
+      class="bg-white rounded-lg shadow mb-4"
+      :bordered="false"
+      content-style="padding: 12px 12px 0 12px;"
+    >
       <!-- 筛选表单 -->
-      <BasicForm
-        @register="register"
-        @submit="reloadTable"
-        @reset="resetFields"
-        @keyup.enter="reloadTable"
-      />
+      <div class="mb-4">
+        <BasicForm
+          @register="register"
+          @submit="reloadTable"
+          @reset="resetFields"
+          @keyup.enter="reloadTable"
+        />
+      </div>
 
       <!-- 操作按钮 -->
-      <n-space justify="end" size="small" style="margin-bottom: 1%">
+      <n-space
+        justify="end"
+        size="small"
+        class="flex flex-wrap gap-2 mb-4 border-b pb-4"
+        style="margin-bottom: 1%"
+      >
         <n-button type="primary" size="medium">
           <template #icon>
             <n-icon>
@@ -76,7 +89,6 @@
           </template>
           批量标签
         </n-button>
-
         <n-button type="error" size="medium">
           <template #icon>
             <n-icon>
@@ -86,31 +98,32 @@
           移除
         </n-button>
       </n-space>
-      <n-divider style="margin-bottom: 12px; margin-top: 0px" />
+      <n-divider class="mb-3 mt-0" />
       <!-- 数据表格 -->
-
-      <BasicTable
-        :columns="columns"
-        :request="loadDataTable"
-        :row-key="(row) => row.id"
-        :actionColumn="actionColumn"
-        :scroll-x="scrollX"
-        :resizeHeightOffset="-10000"
-        size="small"
-        :pagination="pagination"
-        :row-class-name="rowClassName"
-        ref="actionRef"
-        :openChecked="true"
-        @update:checked-row-keys="onCheckedRow"
-        :checked-row-keys="checkedIds"
-      >
-        <template #tableTitle>
-          <n-space>
-            <span>已选择 {{ checkedIds.length }} 项</span>
-            <n-button text type="primary" @click="clearChecked">清空</n-button>
-          </n-space>
-        </template></BasicTable
-      >
+      <div class="mt-4">
+        <BasicTable
+          :columns="columns"
+          :request="loadDataTable"
+          :row-key="(row) => row.id"
+          :actionColumn="actionColumn"
+          :scroll-x="scrollX"
+          :resizeHeightOffset="-10000"
+          size="small"
+          :pagination="pagination"
+          :row-class-name="rowClassName"
+          ref="actionRef"
+          :openChecked="true"
+          @update:checked-row-keys="onCheckedRow"
+          :checked-row-keys="checkedIds"
+        >
+          <template #tableTitle>
+            <n-space>
+              <span>已选择 {{ checkedIds.length }} 项</span>
+              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
+            </n-space>
+          </template></BasicTable
+        >
+      </div>
     </n-card>
 
     <n-modal
@@ -155,7 +168,7 @@
     ExportOutlined,
     ArrowDownOutlined,
   } from '@vicons/antd';
-  
+
   import { useRouter } from 'vue-router';
   import { TableAction, BasicTable } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
@@ -588,95 +601,3 @@
     actionRef.value?.reload();
   };
 </script>
-
-<style scoped>
-  .account-manage-page {
-    padding: 12px;
-    background: #f6f8fa;
-  }
-  .top-nav-cards {
-    margin-bottom: 16px;
-  }
-  .nav-card {
-    background: #fff;
-    border-radius: 8px;
-    box-shadow: 0 1px 4px #0000000d;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    padding: 14px 0;
-    min-height: 80px;
-    transition: box-shadow 0.2s;
-  }
-  .nav-card:hover {
-    box-shadow: 0 4px 16px #00000014;
-  }
-  .nav-card-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 8px;
-  }
-  .nav-card-icon {
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  .nav-card-title {
-    font-size: 15px;
-    color: #555;
-    font-weight: 500;
-  }
-  .nav-card-value {
-    font-size: 18px;
-    font-weight: bold;
-    color: #222;
-  }
-  .main-card {
-    background: #fff;
-    border-radius: 6px;
-    box-shadow: 0 1px 4px #0000000d;
-    margin-bottom: 10px;
-  }
-  .filter-form {
-    margin-bottom: 4px;
-  }
-
-  .table-card {
-    border-radius: 8px;
-    overflow: hidden;
-    margin-bottom: 20px;
-  }
-  .custom-table {
-    border-radius: 8px;
-    overflow: hidden;
-  }
-  .custom-table .n-data-table-th {
-    background-color: #f5f7fa !important;
-    font-weight: 500 !important;
-    color: #4e5969 !important;
-  }
-  .custom-table .n-data-table-tr {
-    transition: all 0.2s ease;
-  }
-  .custom-table .n-data-table-tr:hover {
-    background-color: #f0f7ff !important;
-  }
-  .table-row-even {
-    background-color: #fafafa;
-  }
-
-  .search-buttons-item {
-    display: flex;
-    justify-content: flex-end;
-    padding: 0;
-    margin-right: 10px;
-  }
-
-  .expand-button {
-    display: flex;
-    align-items: center;
-  }
-</style>

@@ -1,57 +1,62 @@
 <template>
-  <div class="task-list-page">
-    <n-card :bordered="false" class="proCard" title="任务管理">
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-10">
+    <n-card
+      :bordered="false"
+      class="max-w-7xl w-full mx-auto rounded-xl shadow p-8"
+      title="任务管理"
+    >
       <!-- 搜索表单 -->
-      <BasicForm
-        @register="register"
-        @submit="reloadTable"
-        @reset="reloadTable"
-        @keyup.enter="reloadTable"
-        :showAdvancedButton="false"
-      >
-        <template #statusSlot="{ model, field }">
-          <n-select
-            v-model:value="model[field]"
-            :options="statusOptions"
-            placeholder="请选择状态"
-            style="width: 100%"
-          />
-        </template>
-      </BasicForm>
+      <div class="mb-6">
+        <BasicForm
+          @register="register"
+          @submit="reloadTable"
+          @reset="reloadTable"
+          @keyup.enter="reloadTable"
+          :showAdvancedButton="false"
+        >
+          <template #statusSlot="{ model, field }">
+            <n-select
+              v-model:value="model[field]"
+              :options="statusOptions"
+              placeholder="请选择状态"
+              style="width: 100%"
+            />
+          </template>
+        </BasicForm>
+      </div>
 
       <!-- 批量操作区 -->
-      <div class="action-buttons-container">
-        <n-space justify="end" class="mb-3">
-          <n-space>
-            <n-button type="primary" @click="onCreateTask">新建任务</n-button>
-            <n-button type="error" @click="onBatchDelete">批量删除</n-button>
-          </n-space>
+      <div class="flex flex-wrap gap-2 justify-end mb-4 border-b pb-4">
+        <n-space>
+          <n-button type="primary" @click="onCreateTask">新建任务</n-button>
+          <n-button type="error" @click="onBatchDelete">批量删除</n-button>
         </n-space>
       </div>
 
       <!-- 数据表格 -->
-      <BasicTable
-        :openChecked="true"
-        :columns="columns"
-        :request="loadDataTable"
-        :pagination="pagination"
-        ref="actionRef"
-        :row-key="(row) => row.id"
-        style="margin-top: 20px"
-        :checked-row-keys="checkedIds"
-        @update:checked-row-keys="onCheckedRow"
-        :scroll-x="scrollX"
-        :resizeHeightOffset="-10000"
-        size="small"
-        :actionColumn="actionColumn"
-      >
-        <template #tableTitle>
-          <n-space>
-            <span>已选择 {{ checkedIds.length }} 项</span>
-            <n-button text type="primary" @click="clearChecked">清空</n-button>
-          </n-space>
-        </template>
-      </BasicTable>
+      <div class="mt-6">
+        <BasicTable
+          :openChecked="true"
+          :columns="columns"
+          :request="loadDataTable"
+          :pagination="pagination"
+          ref="actionRef"
+          :row-key="(row) => row.id"
+          :checked-row-keys="checkedIds"
+          @update:checked-row-keys="onCheckedRow"
+          :scroll-x="scrollX"
+          :resizeHeightOffset="-10000"
+          size="small"
+          :actionColumn="actionColumn"
+        >
+          <template #tableTitle>
+            <n-space>
+              <span>已选择 {{ checkedIds.length }} 项</span>
+              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
+            </n-space>
+          </template>
+        </BasicTable>
+      </div>
     </n-card>
   </div>
 </template>
@@ -74,7 +79,7 @@
   ];
 
   const actionColumn = {
-    width: 120,
+    width: 140,
     title: '操作',
     key: 'action',
     fixed: 'right',
@@ -109,7 +114,6 @@
     },
     { title: '创建时间', key: 'createTime', width: 160 },
     { title: '最后修改时间', key: 'lastUpdateTime', width: 160 },
-    
   ];
 
   const allData = [
@@ -232,26 +236,3 @@
     return totalColumnsWidth + actionColumn.width;
   }).value;
 </script>
-
-<style scoped>
-  .task-list-page {
-    padding: 12px;
-    background: #f6f8fa;
-  }
-  .proCard {
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-  }
-  .filter-bar {
-    margin-bottom: 12px;
-    display: flex;
-    align-items: center;
-  }
-  .action-buttons-container {
-    padding: 16px 0;
-    border-bottom: 1px solid #efeff5;
-    margin-bottom: 16px;
-  }
-  .mb-3 {
-    margin-bottom: 12px;
-  }
-</style>

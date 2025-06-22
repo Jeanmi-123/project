@@ -1,114 +1,116 @@
 <template>
-  <div class="pull-task-container">
-    <n-card :bordered="false" class="proCard" title="拉群任务">
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-2">
+    <n-card :bordered="false" class="rounded-xl shadow" title="拉群任务">
       <!-- 搜索表单 -->
-      <BasicForm
-        @register="register"
-        @submit="reloadTable"
-        @reset="reloadTable"
-        @keyup.enter="reloadTable"
-      >
-        <template #statusSlot="{ model, field }">
-          <n-input v-model:value="model[field]" />
-        </template>
-      </BasicForm>
+      <div class="mb-6">
+        <BasicForm
+          @register="register"
+          @submit="reloadTable"
+          @reset="reloadTable"
+          @keyup.enter="reloadTable"
+        >
+          <template #statusSlot="{ model, field }">
+            <n-input v-model:value="model[field]" />
+          </template>
+        </BasicForm>
+      </div>
 
       <!-- 批量操作区 -->
-      <div class="action-buttons-container">
-        <n-space justify="end" class="mb-3">
-          <n-space>
-            <n-button type="warning" @click="handleBatchDeleteFailed">
-              <template #icon>
-                <n-icon>
-                  <DeleteOutlined />
-                </n-icon>
-              </template>
-              一键删除失败任务
-            </n-button>
-            <n-button type="info" @click="handlePullTask">
-              <template #icon>
-                <n-icon>
-                  <UsergroupAddOutlined />
-                </n-icon>
-              </template>
-              拉群任务
-            </n-button>
-            <n-button type="info" @click="handleRefreshTag">
-              <template #icon>
-                <n-icon>
-                  <RedoOutlined />
-                </n-icon>
-              </template>
-              刷新拉手标签
-            </n-button>
-            <n-button type="default" @click="handleAutoPackage">
-              <template #icon>
-                <n-icon>
-                  <FolderOutlined />
-                </n-icon>
-              </template>
-              自动分包
-            </n-button>
-          </n-space>
-          <n-space>
-            <n-button type="primary">
-              <template #icon>
-                <n-icon>
-                  <ExportOutlined />
-                </n-icon>
-              </template>
-              导出报告
-            </n-button>
-            <n-button type="primary">
-              <template #icon>
-                <n-icon>
-                  <ExportOutlined />
-                </n-icon>
-              </template>
-              导出群链接
-            </n-button>
-            <n-button type="default">
-              <template #icon>
-                <n-icon>
-                  <UsergroupAddOutlined />
-                </n-icon>
-              </template>
-              批量发起合群申请
-            </n-button>
+      <div class="flex flex-wrap gap-2 justify-end mb-4 border-b pb-4">
+        <n-space>
+          <n-button type="warning" @click="handleBatchDeleteFailed">
+            <template #icon>
+              <n-icon>
+                <DeleteOutlined />
+              </n-icon>
+            </template>
+            一键删除失败任务
+          </n-button>
+          <n-button type="info" @click="handlePullTask">
+            <template #icon>
+              <n-icon>
+                <UsergroupAddOutlined />
+              </n-icon>
+            </template>
+            拉群任务
+          </n-button>
+          <n-button type="info" @click="handleRefreshTag">
+            <template #icon>
+              <n-icon>
+                <RedoOutlined />
+              </n-icon>
+            </template>
+            刷新拉手标签
+          </n-button>
+          <n-button type="default" @click="handleAutoPackage">
+            <template #icon>
+              <n-icon>
+                <FolderOutlined />
+              </n-icon>
+            </template>
+            自动分包
+          </n-button>
+        </n-space>
+        <n-space>
+          <n-button type="primary">
+            <template #icon>
+              <n-icon>
+                <ExportOutlined />
+              </n-icon>
+            </template>
+            导出报告
+          </n-button>
+          <n-button type="primary">
+            <template #icon>
+              <n-icon>
+                <ExportOutlined />
+              </n-icon>
+            </template>
+            导出群链接
+          </n-button>
+          <n-button type="default">
+            <template #icon>
+              <n-icon>
+                <UsergroupAddOutlined />
+              </n-icon>
+            </template>
+            批量发起合群申请
+          </n-button>
 
-            <n-button type="error" @click="handleDeleteSelected">
-              <template #icon>
-                <n-icon>
-                  <DeleteOutlined />
-                </n-icon>
-              </template>
-              删除任务
-            </n-button>
-          </n-space>
+          <n-button type="error" @click="handleDeleteSelected">
+            <template #icon>
+              <n-icon>
+                <DeleteOutlined />
+              </n-icon>
+            </template>
+            删除任务
+          </n-button>
         </n-space>
       </div>
 
       <!-- 数据表格 -->
-      <BasicTable
-        :openChecked="true"
-        :columns="columns"
-        :request="loadDataTable"
-        :row-key="(row) => row.id"
-        ref="actionRef"
-        :actionColumn="actionColumn"
-        :checked-row-keys="checkedIds"
-        @update:checked-row-keys="onCheckedRow"
-        :scroll-x="scrollX"
-        :resizeHeightOffset="-10000"
-        size="small"
-      >
-        <template #tableTitle>
-          <n-space>
-            <span>已选择 {{ checkedIds.length }} 项</span>
-            <n-button text type="primary" @click="clearChecked">清空</n-button>
-          </n-space>
-        </template>
-      </BasicTable>
+      <div class="mt-6">
+        <BasicTable
+          :openChecked="true"
+          :columns="columns"
+          :request="loadDataTable"
+          :row-key="(row) => row.id"
+          ref="actionRef"
+          :actionColumn="actionColumn"
+          :checked-row-keys="checkedIds"
+          @update:checked-row-keys="onCheckedRow"
+          :scroll-x="scrollX"
+          :resizeHeightOffset="-10000"
+          size="small"
+        >
+          <template #tableTitle>
+            <n-space>
+              <span>已选择 {{ checkedIds.length }} 项</span>
+              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
+            </n-space>
+          </template>
+        </BasicTable>
+      </div>
     </n-card>
   </div>
 </template>
@@ -477,63 +479,3 @@
     return totalColumnsWidth + actionColumn.width;
   }).value;
 </script>
-
-<style lang="less" scoped>
-  .pull-task-container {
-    padding: 12px;
-    background: #f6f8fa;
-
-    .proCard {
-      box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-    }
-
-    .n-layout-page-header {
-      margin-bottom: 12px;
-      .n-card {
-        box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
-      }
-    }
-
-    .action-buttons-container {
-      padding: 16px 0;
-      border-bottom: 1px solid #efeff5;
-      margin-bottom: 16px;
-
-      .n-button {
-        margin-right: 8px;
-        &:last-child {
-          margin-right: 0;
-        }
-      }
-      .ml-1 {
-        margin-left: 4px;
-      }
-      .mb-3 {
-        margin-bottom: 12px;
-      }
-    }
-
-    // 针对n-alert的警告条样式
-    .n-alert {
-      padding: 8px 15px;
-      margin-top: 10px;
-      margin-bottom: 10px;
-      line-height: 20px;
-      border-radius: 4px;
-      background-color: #fffbe6;
-      border: 1px solid #ffe58f;
-      color: #faad14;
-    }
-
-    // 覆盖表格样式以匹配图片
-    :deep(.n-data-table-th) {
-      background-color: #f7f7f7 !important;
-      font-weight: bold;
-      color: rgba(0, 0, 0, 0.85);
-    }
-
-    :deep(.n-data-table-td) {
-      padding: 8px 16px;
-    }
-  }
-</style>
