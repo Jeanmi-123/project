@@ -14,14 +14,11 @@ import user from './user';
 // @ts-ignore
 import tabsView from './tabs-view';
 // @ts-ignore
-import lockscreen from './lockscreen';
-// @ts-ignore
 import dict from './dict';
 
 export default {
   asyncRoute,
   user,
   tabsView,
-  lockscreen,
   dict,
 };

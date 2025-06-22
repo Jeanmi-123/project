@@ -11,7 +11,7 @@
         :model="formValue"
         :rules="rules"
         label-placement="left"
-        :label-width="100"
+        :label-width="120"
         style="max-width: 89%; margin: 0 auto"
       >
         <n-form-item label="备注" path="remarks">
@@ -28,6 +28,7 @@
             v-model:value="formValue.tags"
             multiple
             placeholder="请选择标签"
+            clearable
             :options="tagOptions"
           />
         </n-form-item>
@@ -36,8 +37,24 @@
           <n-select
             v-model:value="formValue.group"
             placeholder="请选择分组"
+            clearable
             :options="groupOptions"
           />
+        </n-form-item>
+
+        <n-form-item label="代理IP" path="proxyIp">
+          <n-select
+            v-model:value="formValue.proxyIp"
+            placeholder="请选择代理IP"
+            :options="proxyIpOptions"
+            clearable
+          />
+        </n-form-item>
+        <n-form-item label="是否保持在线" path="keepOnline">
+          <n-radio-group v-model:value="formValue.keepOnline" name="keepOnline">
+            <n-radio :value="true">是</n-radio>
+            <n-radio :value="false">否</n-radio>
+          </n-radio-group>
         </n-form-item>
         <n-form-item label="账号版本" path="accountVersion">
           <n-radio-group v-model:value="formValue.accountVersion" name="accountVersion">
@@ -45,6 +62,8 @@
             <n-radio value="android_business">安卓商业</n-radio>
           </n-radio-group>
         </n-form-item>
+
+
 
         <n-form-item label="拖拽上传" path="files">
           <n-upload
@@ -107,7 +126,9 @@
     remarks: '',
     tags: [],
     group: null,
+    proxyIp: null,
     accountVersion: 'android',
+    keepOnline: true,
     files: [], // 添加文件列表
   });
 
@@ -122,6 +143,12 @@
     { label: '分组一', value: 'group_1' },
     { label: '分组二', value: 'group_2' },
     { label: '分组三', value: 'group_3' },
+  ];
+
+  const proxyIpOptions = [
+    { label: '代理IP1', value: 'ip_1' },
+    { label: '代理IP2', value: 'ip_2' },
+    { label: '代理IP3', value: 'ip_3' },
   ];
 
   // 表单校验规则
@@ -146,9 +173,19 @@
       message: '请选择分组',
       trigger: 'change',
     },
+    proxyIp: {
+      required: true,
+      message: '请选择代理IP',
+      trigger: 'change',
+    },
     accountVersion: {
       required: true,
       message: '请选择账号版本',
+      trigger: 'change',
+    },
+    keepOnline: {
+      required: true,
+      message: '请选择是否保持在线',
       trigger: 'change',
     },
     files: {

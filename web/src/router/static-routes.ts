@@ -35,4 +35,18 @@ export const staticRoutes: Array<RouteRecordRaw> = [
     ],
   },
   // 您可以在这里添加更多的前端静态路由
+  {
+    path: '/apply/asset/recharge',
+    name: 'AssetRecharge',
+    component: Layout,
+    meta: { title: '在线充值' },
+    children: [
+      {
+        path: 'order-detail',
+        name: 'RechargeOrderDetail',
+        component: () => import('@/views/asset/recharge/order-detail.vue'),
+        meta: { title: '充值订单详情' },
+      },
+    ],
+  },
 ];

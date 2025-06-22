@@ -73,60 +73,7 @@
       <div class="user-balance-box">
         <span class="balance-label">用户余额：</span>
         <span class="balance-value">205.130 USDT</span>
-        <span class="balance-action">充值</span>
-      </div>
-      <!--      <div-->
-      <!--        class="layout-header-trigger layout-header-trigger-min"-->
-      <!--        v-for="item in iconList"-->
-      <!--        :key="item.icon.name"-->
-      <!--      >-->
-      <!--        <n-tooltip placement="bottom">-->
-      <!--          <template #trigger>-->
-      <!--            <n-icon size="18">-->
-      <!--              <component :is="item.icon" v-on="item.eventObject || {}" />-->
-      <!--            </n-icon>-->
-      <!--          </template>-->
-      <!--          <span>{{ item.tips }}</span>-->
-      <!--        </n-tooltip>-->
-      <!--      </div>-->
-
-      <div
-        class="layout-header-trigger layout-header-trigger-min"
-        v-for="item in iconList"
-        :key="item.icon"
-      >
-        <n-popover
-          placement="bottom"
-          v-if="item.icon === 'BellOutlined'"
-          trigger="click"
-          :width="getIsMobile ? 276 : 420"
-        >
-          <template #trigger>
-            <n-tooltip placement="bottom">
-              <template #trigger>
-                <n-badge :value="notificationStore.getUnreadCount()" :max="99" processing>
-                  <n-icon size="18">
-                    <BellOutlined />
-                  </n-icon>
-                </n-badge>
-              </template>
-              <span>{{ item.tips }}</span>
-            </n-tooltip>
-          </template>
-
-          <SystemMessage />
-        </n-popover>
-
-        <div v-else>
-          <n-tooltip placement="bottom">
-            <template #trigger>
-              <n-icon size="18">
-                <component :is="item.icon" v-on="item.eventObject || {}" />
-              </n-icon>
-            </template>
-            <span>{{ item.tips }}</span>
-          </n-tooltip>
-        </div>
+        <span class="balance-action" @click="goToRecharge">充值</span>
       </div>
 
       <!-- 个人中心 -->
@@ -134,7 +81,7 @@
         <n-dropdown trigger="click" @select="avatarSelect" :options="avatarOptions" show-arrow>
           <div class="avatar">
             <n-avatar v-if="userStore.avatar" round :size="30" :src="userStore.avatar" />
-            <!-- <n-avatar v-else round :size="30">{{ userStore.realName }}</n-avatar> -->
+
             <span class="username-display"
               >{{ userStore.info?.username }}<br />{{ userStore?.info?.roleName }}</span
             >
@@ -173,11 +120,9 @@
     useNotification,
     NotificationReactive,
     NButton,
-    NText,
   } from 'naive-ui';
   import { TABS_ROUTES } from '@/store/mutation-types';
   import { useUserStore } from '@/store/modules/user';
-  import { useLockscreenStore } from '@/store/modules/lockscreen';
   import { AsideMenu } from '@/layout/components/Menu';
   import { useProjectSetting } from '@/hooks/setting/useProjectSetting';
   import { NotificationsOutline as NotificationsIcon } from '@vicons/ionicons5';
@@ -204,7 +149,7 @@
     setup(props, { emit }) {
       const userStore = useUserStore();
       const notificationStore = notificationStoreWidthOut();
-      const useLockscreen = useLockscreenStore();
+
       const message = useMessage();
       const dialog = useDialog();
       const {
@@ -316,34 +261,8 @@
         });
       };
 
-      // 图标列表
-      const iconList = [
-        {
-          icon: 'LockOutlined',
-          tips: '锁屏',
-          eventObject: {
-            click: () => useLockscreen.setLock(true),
-          },
-        },
-      ];
-
-      const renderCustomHeader = () => {
-        const username = userStore?.info?.username;
-        const roleName = userStore?.info?.roleName;
-        return h(
-          'div',
-          {
-            style: 'display: flex; align-items: center; padding: 8px 12px;',
-          },
-          [
-            h('div', null, [
-              h('div', null, [h(NText, { depth: 2 }, { default: () => '@' + username })]),
-              h('div', { style: 'font-size: 12px;' }, [
-                h(NText, { depth: 3 }, { default: () => roleName }),
-              ]),
-            ]),
-          ]
-        );
+      const goToRecharge = () => {
+        router.push('/apply/asset/recharge');
       };
 
       const avatarOptions = [
@@ -463,7 +382,6 @@
       });
       return {
         ...toRefs(state),
-        iconList,
         doLogout,
         route,
         dropdownSelect,
@@ -483,6 +401,7 @@
         userStore,
         updateMenu,
         projectName,
+        goToRecharge,
       };
     },
   });
@@ -675,7 +594,7 @@
     display: flex;
     align-items: center;
     margin-right: 32px;
-
+    cursor: default;
     font-weight: 500;
     .balance-label {
       color: #666;
