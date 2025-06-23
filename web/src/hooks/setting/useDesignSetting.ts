@@ -8,11 +8,8 @@ export function useDesignSetting() {
 
   const getAppTheme = computed(() => designStore.appTheme);
 
-  const getAppThemeList = computed(() => designStore.appThemeList);
-
   return {
     getDarkTheme,
     getAppTheme,
-    getAppThemeList,
   };
 }

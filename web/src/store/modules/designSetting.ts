@@ -2,15 +2,13 @@ import { defineStore } from 'pinia';
 import { store } from '@/store';
 import designSetting from '@/settings/designSetting';
 
-const { darkTheme, appTheme, appThemeList } = designSetting;
+const { darkTheme, appTheme } = designSetting;
 
 interface DesignSettingState {
   //深色主题
   darkTheme: boolean;
   //系统风格
   appTheme: string;
-  //系统内置风格
-  appThemeList: string[];
 }
 
 export const useDesignSettingStore = defineStore({
@@ -18,7 +16,6 @@ export const useDesignSettingStore = defineStore({
   state: (): DesignSettingState => ({
     darkTheme,
     appTheme,
-    appThemeList,
   }),
   getters: {
     getDarkTheme(): boolean {
@@ -26,9 +23,6 @@ export const useDesignSettingStore = defineStore({
     },
     getAppTheme(): string {
       return this.appTheme;
-    },
-    getAppThemeList(): string[] {
-      return this.appThemeList;
     },
   },
   actions: {},
