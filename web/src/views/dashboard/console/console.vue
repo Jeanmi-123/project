@@ -117,7 +117,7 @@
 
 <script lang="ts" setup>
   import { computed, h, reactive, ref } from 'vue';
-  import { useDialog, useMessage, NTag, NButton, NSpace, NTooltip, NIcon } from 'naive-ui';
+  import { NTag, NButton, NSpace, NTooltip, NIcon } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
   import {
@@ -127,15 +127,27 @@
     ExportOutlined,
     FolderOutlined,
   } from '@vicons/antd';
+  import { useConsoleActions } from './utils/consoleConFun';
+  import { consoleFilterFormSchemas } from './utils/consoleForm';
 
-  const message = useMessage();
-  const dialog = useDialog();
   const actionRef = ref();
   const checkedIds = ref<number[]>([]);
   const scrollX = ref(1500); // Placeholder for scrollX
 
+  const {
+    reloadTable,
+    onCheckedRow,
+    clearChecked,
+    handleBatchDeleteFailed,
+    handlePullTask,
+    handleRefreshTag,
+    handleAutoPackage,
+    handleDeleteSelected,
+    handleAction,
+  } = useConsoleActions(actionRef, checkedIds);
+
   const actionColumn = reactive({
-    width: 200,
+    width: 180,
     title: '操作',
     key: 'action',
     fixed: 'right',
@@ -359,110 +371,11 @@
     return { list: mockData, pageNum: 1, pageSize: 10, total: 100 };
   };
 
-  const [register, { resetFields }] = useForm({
+  const [register] = useForm({
     gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    schemas: [
-      {
-        field: 'id',
-        component: 'NInput',
-        label: 'ID',
-        componentProps: {
-          placeholder: '请输入ID',
-        },
-      },
-      {
-        field: 'taskName',
-        component: 'NInput',
-        label: '任务名',
-        componentProps: {
-          placeholder: '请输入任务名',
-        },
-      },
-      {
-        field: 'taskProgress',
-        component: 'NSelect',
-        label: '任务进度',
-        componentProps: {
-          placeholder: '选择任务进度',
-          options: [
-            { label: '全部', value: '' },
-            { label: '进行中', value: 'progressing' },
-            { label: '已完成', value: 'completed' },
-            { label: '失败', value: 'failed' },
-          ],
-        },
-      },
-      {
-        field: 'mergeStatus',
-        component: 'NSelect',
-        label: '合并状态',
-        componentProps: {
-          placeholder: '选择合并状态',
-          options: [
-            { label: '全部', value: '' },
-            { label: '已合并', value: 'merged' },
-            { label: '未合并', value: 'unmerged' },
-          ],
-        },
-      },
-    ],
+    schemas: consoleFilterFormSchemas,
   });
-
-  function reloadTable() {
-    actionRef.value.reload();
-  }
-
-  function onCheckedRow(rowKeys: number[]) {
-    checkedIds.value = rowKeys;
-  }
-
-  function clearChecked() {
-    checkedIds.value = [];
-  }
-
-  function handleBatchDeleteFailed() {
-    message.info('一键删除失败任务');
-    // Implement delete logic here
-  }
-
-  function handlePullTask() {
-    message.info('拉群任务');
-    // Implement pull task logic here
-  }
-
-  function handleRefreshTag() {
-    message.info('刷新拉手标签');
-    // Implement refresh tag logic here
-  }
-
-  function handleAutoPackage() {
-    message.info('自动分包');
-    // Implement auto package logic here
-  }
-
-  function handleDeleteSelected() {
-    if (checkedIds.value.length === 0) {
-      message.warning('请选择要删除的任务');
-      return;
-    }
-    dialog.warning({
-      title: '警告',
-      content: `您确定要删除选中的 ${checkedIds.value.length} 项任务吗？`,
-      positiveText: '确定',
-      negativeText: '取消',
-      onPositiveClick: () => {
-        message.success('删除成功');
-        checkedIds.value = [];
-        reloadTable();
-      },
-    });
-  }
-
-  function handleAction(action: string, record: any) {
-    message.info(`执行操作: ${action} for ID: ${record.id}`);
-    // Implement specific action logic
-  }
 
   // 计算scrollX，根据实际列数和actionColumn的宽度来动态调整
   scrollX.value = computed(() => {

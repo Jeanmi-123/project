@@ -62,8 +62,10 @@
   import { NButton, NSpace, NCard } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
+  import { workplaceFilterFormSchemas } from './utils/workplaceForm';
+  import { useTableSelection } from '@/hooks/useTableSelection';
 
-  const checkedIds = ref<number[]>([]);
+  const { checkedIds, clearChecked, onCheckedRow } = useTableSelection<number>();
   const actionRef = ref();
   const scrollX = ref(1500);
 
@@ -183,22 +185,7 @@
   const [register, { resetFields }] = useForm({
     gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    schemas: [
-      {
-        field: 'taskName',
-        component: 'NInput',
-        label: '任务名',
-        componentProps: {
-          placeholder: '请输入任务名',
-        },
-      },
-      {
-        field: 'status',
-        component: 'NSelect',
-        label: '状态',
-        slot: 'statusSlot',
-      },
-    ],
+    schemas: workplaceFilterFormSchemas,
   });
 
   function reloadTable() {
@@ -210,12 +197,6 @@
   }
   function onBatchDelete() {
     // 批量删除逻辑
-  }
-  function onCheckedRow(rowKeys: number[]) {
-    checkedIds.value = rowKeys;
-  }
-  function clearChecked() {
-    checkedIds.value = [];
   }
   function onEdit(record) {
     // 编辑逻辑
