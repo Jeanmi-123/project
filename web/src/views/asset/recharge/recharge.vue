@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-2">
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">
       <n-steps :current="1" class="mb-8 pl-[20%]" size="medium">
         <n-step title="创建充值订单" />
@@ -62,14 +62,15 @@
 <script lang="ts" setup>
   import { ref, onMounted, inject } from 'vue';
   import { useRouter } from 'vue-router';
-
   import { useMessage } from 'naive-ui';
+  import { useRechargeStore } from '@/store/modules/recharge';
   import { SocketEnum } from '@/enums/socketEnum';
   import { addOnMessage } from '@/utils/websocket';
 
   const showQrModal = ref(false);
 
   const message = useMessage();
+  const rechargeStore = useRechargeStore();
 
   const formValue = ref({ amount: '' });
   const showAlert1 = ref(true);
@@ -100,11 +101,9 @@
   addOnMessage(onMessageList, handleMessageList);
 
   const nextStep = () => {
+    rechargeStore.setAmount(formValue.value.amount);
     router.push({
       path: '/apply/asset/recharge/order-detail',
-      query: {
-        amount: formValue.value.amount,
-      },
     });
   };
 </script>

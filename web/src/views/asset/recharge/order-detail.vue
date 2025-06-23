@@ -1,5 +1,8 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-2">
+  <div
+    class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2"
+    v-if="Number(amount) > 0"
+  >
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">
       <n-steps :current="2" class="mb-8 pl-[20%]" size="medium">
         <n-step title="创建充值订单" />
@@ -48,10 +51,17 @@
 </template>
 
 <script setup lang="ts">
-  import { ref, onMounted } from 'vue';
-  import { useRoute } from 'vue-router';
-  const route = useRoute();
-  const amount = route.query.amount;
+  import { ref, onMounted, onUnmounted } from 'vue';
+  import { useRechargeStore } from '@/store/modules/recharge';
+  import { useRouter } from 'vue-router';
+
+  const rechargeStore = useRechargeStore();
+  const amount = ref(rechargeStore.amount);
+  const router = useRouter();
+  // 页面销毁时清空金额
+  onUnmounted(() => {
+    rechargeStore.setAmount(0);
+  });
 
   // 倒计时
   const timerText = ref('00:10:00');
@@ -66,6 +76,9 @@
     }
   };
   onMounted(() => {
+    if (Number(amount.value) <= 0) {
+      router.back();
+    }
     updateTimer();
   });
 </script>

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-8 px-2">
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="拉群任务">
       <!-- 搜索表单 -->
       <div class="mb-6">

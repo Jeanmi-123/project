@@ -1,10 +1,6 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-10">
-    <n-card
-      :bordered="false"
-      class="max-w-7xl w-full mx-auto rounded-xl shadow p-8"
-      title="任务管理"
-    >
+  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
+    <n-card :bordered="false" class="rounded-xl shadow" title="任务管理">
       <!-- 搜索表单 -->
       <div class="mb-6">
         <BasicForm

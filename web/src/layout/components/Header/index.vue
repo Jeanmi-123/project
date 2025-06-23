@@ -272,10 +272,6 @@
         //   render: renderCustomHeader,
         // },
         {
-          type: 'divider',
-          key: 'd1',
-        },
-        {
           label: '个人设置',
           key: 1,
         },
