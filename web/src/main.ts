@@ -5,7 +5,6 @@ import router, { setupRouter } from './router';
 import { setupStore } from '@/store';
 import { setupNaive, setupDirectives } from '@/plugins';
 import { AppProvider } from '@/components/Application';
-import setupWebsocket from '@/utils/websocket/index';
 
 async function bootstrap() {
   const appProvider = createApp(AppProvider);
@@ -35,8 +34,6 @@ async function bootstrap() {
 
   // 路由准备就绪后挂载APP实例
   await router.isReady();
-
-  setupWebsocket();
 
   app.mount('#app', true);
 }

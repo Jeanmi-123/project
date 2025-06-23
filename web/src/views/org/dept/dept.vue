@@ -110,7 +110,6 @@
           :resizeHeightOffset="-10000"
           size="small"
           :pagination="pagination"
-          :row-class-name="rowClassName"
           ref="actionRef"
           :openChecked="true"
           @update:checked-row-keys="onCheckedRow"
@@ -168,12 +167,12 @@
     ExportOutlined,
     ArrowDownOutlined,
   } from '@vicons/antd';
-
-  import { useRouter } from 'vue-router';
   import { TableAction, BasicTable } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
+  import { useTableSelection } from '@/hooks/useTableSelection';
+  import { deptFilterFormSchemas } from './utils/deptForm';
+  import { useDeptActions } from './utils/deptConFun';
 
-  const router = useRouter();
   // 统计数据变量
   const statTotal = ref(1008);
   const statOnline = ref(701);
@@ -182,159 +181,22 @@
   const statLockTime = ref(126);
   const statLoginFail = ref(0);
 
-  const riskStatusOptions = [
-    { label: '正常', value: 'normal' },
-    { label: '风控', value: 'risk' },
-  ];
-  const accountStatusOptions = [
-    { label: '在线', value: 'online' },
-    { label: '离线', value: 'offline' },
-    { label: '封禁', value: 'banned' },
-  ];
-  const ipGroupOptions = [
-    { label: '分组1', value: 'group1' },
-    { label: '分组2', value: 'group2' },
-  ];
-  const accountVersionOptions = [
-    { label: '单用户个人', value: 'single' },
-    { label: '多用户企业', value: 'multi' },
-  ];
-  const tagOptions = [
-    { label: 'JP群', value: 'jp' },
-    { label: 'VIP', value: 'vip' },
-  ];
-  const yesNoOptions = [
-    { label: '是', value: 'true' },
-    { label: '否', value: 'false' },
-  ];
   const [register, { resetFields }] = useForm({
     gridProps: { cols: '1 s:1 m:2 l:3 xl:4 2xl:4' },
     labelWidth: 80,
-    schemas: [
-      {
-        field: 'account',
-        component: 'NInput',
-        label: '账号',
-        componentProps: {
-          placeholder: '请输入账号',
-          clearable: true,
-        },
-      },
-      {
-        field: 'riskStatus',
-        component: 'NSelect',
-        label: '风控状态',
-        componentProps: {
-          placeholder: '请选择风控状态',
-          options: riskStatusOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'accountStatus',
-        component: 'NSelect',
-        label: '账号状态',
-        componentProps: {
-          placeholder: '请选择账号状态',
-          options: accountStatusOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'ipGroup',
-        component: 'NSelect',
-        label: 'IP分组',
-        componentProps: {
-          placeholder: '请选择IP分组',
-          options: ipGroupOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'accountVersion',
-        component: 'NSelect',
-        label: '账号版本',
-        componentProps: {
-          placeholder: '请选择账号版本',
-          options: accountVersionOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'tag',
-        component: 'NSelect',
-        label: '标签',
-        componentProps: {
-          placeholder: '请选择标签',
-          options: tagOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'hasAvatar',
-        component: 'NSelect',
-        label: '是否设置头像',
-        componentProps: {
-          placeholder: '请选择',
-          options: yesNoOptions,
-          clearable: true,
-        },
-      },
-      {
-        field: 'isReRegister',
-        component: 'NSelect',
-        label: '是否重新注册',
-        componentProps: {
-          placeholder: '请选择',
-          options: yesNoOptions,
-          clearable: true,
-        },
-      },
-    ],
+    schemas: deptFilterFormSchemas,
   });
 
-  const isExpanded = ref(false);
   const scrollX = ref(1500);
 
-  const toggleExpand = () => {
-    isExpanded.value = !isExpanded.value;
-  };
-
-  const handleSearch = () => {
-    reloadTable();
-  };
-  const handleReset = () => {
-    searchForm.value = {
-      account: '',
-      riskStatus: null,
-      accountStatus: null,
-      ipGroup: null,
-      accountVersion: null,
-      tag: null,
-      hasAvatar: null,
-      isReRegister: null,
-    };
-    reloadTable();
-  };
-
-  const handleExportAccount = () => {
-    router.push('/org/dept/edit');
-  };
-
-  const handleOnlineAccount = (row) => {
-    console.log('上线', row);
-    // 这里可以添加单个账号上线的逻辑
-  };
-
-  const handleOfflineAccount = (row) => {
-    console.log('下线', row);
-    // 这里可以添加单个账号下线的逻辑
-  };
-
-  const handleRemoveAccount = (row) => {
-    console.log('移除', row);
-    // 这里可以添加单个账号移除的逻辑
-  };
+  const actionRef = ref();
+  const {
+    handleExportAccount,
+    handleOnlineAccount,
+    handleOfflineAccount,
+    handleRemoveAccount,
+    reloadTable,
+  } = useDeptActions(actionRef);
 
   const actionColumn = reactive({
     width: 250,
@@ -367,7 +229,6 @@
       });
     },
   });
-
   const columns: DataTableColumn<any>[] = [
     { type: 'selection' },
     { title: 'ID', key: 'id', width: 80, fixed: 'left' },
@@ -522,7 +383,7 @@
       groupTime: '2025-06-11 12:47:36',
     },
     {
-      id: 1041517,
+      id: 1041518,
       account: '918799394559',
       tag: ['JP群', 'VIP'],
       riskStatus: 1,
@@ -566,20 +427,8 @@
     // 表单提交逻辑
   };
 
-  // 表格行样式
-  const rowClassName = (row: any) => {
-    return row.index % 2 === 1 ? 'table-row-even' : '';
-  };
-
-  // 新增清空选中项的方法
-  const checkedIds = ref<number[]>([]);
-  const clearChecked = () => {
-    checkedIds.value = [];
-  };
-
-  const onCheckedRow = (rowKeys) => {
-    checkedIds.value = rowKeys;
-  };
+  // 替换 checkedIds、clearChecked、onCheckedRow 的本地实现
+  const { checkedIds, clearChecked, onCheckedRow } = useTableSelection<number>();
 
   // 添加数据加载函数
   const loadDataTable = async (params) => {
@@ -593,11 +442,4 @@
     };
   };
 
-  // 添加表格引用
-  const actionRef = ref();
-
-  // 添加刷新表格方法
-  const reloadTable = () => {
-    actionRef.value?.reload();
-  };
 </script>

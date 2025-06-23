@@ -14,7 +14,7 @@
         :label-width="130"
         class="w-xl"
       >
-        <n-form-item label="备注" path="remarks"   >
+        <n-form-item label="备注" path="remarks">
           <n-input
             v-model:value="formValue.remarks"
             placeholder="请输入备注"
@@ -23,7 +23,7 @@
           />
         </n-form-item>
 
-        <n-form-item label="标签" path="tags"   >
+        <n-form-item label="标签" path="tags">
           <n-select
             v-model:value="formValue.tags"
             multiple
@@ -33,7 +33,7 @@
           />
         </n-form-item>
 
-        <n-form-item label="分组" path="group"   >
+        <n-form-item label="分组" path="group">
           <n-select
             v-model:value="formValue.group"
             placeholder="请选择分组"
@@ -42,7 +42,7 @@
           />
         </n-form-item>
 
-        <n-form-item label="代理IP" path="proxyIp"   >
+        <n-form-item label="代理IP" path="proxyIp">
           <n-select
             v-model:value="formValue.proxyIp"
             placeholder="请选择代理IP"
@@ -50,20 +50,20 @@
             clearable
           />
         </n-form-item>
-        <n-form-item label="是否保持在线" path="keepOnline"   >
+        <n-form-item label="是否保持在线" path="keepOnline">
           <n-radio-group v-model:value="formValue.keepOnline" name="keepOnline">
             <n-radio :value="true">是</n-radio>
             <n-radio :value="false">否</n-radio>
           </n-radio-group>
         </n-form-item>
-        <n-form-item label="账号版本" path="accountVersion"   >
+        <n-form-item label="账号版本" path="accountVersion">
           <n-radio-group v-model:value="formValue.accountVersion" name="accountVersion">
             <n-radio value="android">安卓</n-radio>
             <n-radio value="android_business">安卓商业</n-radio>
           </n-radio-group>
         </n-form-item>
 
-        <n-form-item label="拖拽上传" path="files"   >
+        <n-form-item label="拖拽上传" path="files">
           <n-upload
             v-model:file-list="formValue.files"
             multiple
@@ -72,7 +72,9 @@
             accept=".txt"
             class="w-full"
           >
-            <n-upload-dragger class="w-full h-52 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 flex flex-col items-center justify-center">
+            <n-upload-dragger
+              class="w-full h-52 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 flex flex-col items-center justify-center"
+            >
               <div class="mb-3 text-gray-400">
                 <n-icon size="48" :depth="3">
                   <UploadOutlined />
@@ -87,7 +89,9 @@
       <n-divider class="mb-3 mt-0" />
       <div class="mb-5">
         <n-space justify="end" class="w-full">
-          <n-button type="primary" @click="handleViewHistory" class="mr-2">点击查看历史导入</n-button>
+          <n-button type="primary" @click="handleViewHistory" class="mr-2"
+            >点击查看历史导入</n-button
+          >
           <n-button type="primary" @click="handleSubmit" class="mr-2">保存</n-button>
           <n-button @click="handleCancel">取消</n-button>
         </n-space>
@@ -112,6 +116,8 @@
   import { useRouter } from 'vue-router';
   import { UploadOutlined } from '@vicons/antd';
   import historyList from './components/historyList.vue';
+  import { requiredRule, tagsRule, keepOnlineRule, filesRule } from '@/utils/formRules';
+  import { tagOptions, groupOptions, proxyIpOptions } from '@/utils/selectOptions';
 
   const formRef = ref<FormInst | null>(null);
   const message = useMessage();
@@ -128,72 +134,15 @@
     files: [], // 添加文件列表
   });
 
-  // 示例选项数据
-  const tagOptions = [
-    { label: '标签A', value: 'tag_a' },
-    { label: '标签B', value: 'tag_b' },
-    { label: '标签C', value: 'tag_c' },
-  ];
-
-  const groupOptions = [
-    { label: '分组一', value: 'group_1' },
-    { label: '分组二', value: 'group_2' },
-    { label: '分组三', value: 'group_3' },
-  ];
-
-  const proxyIpOptions = [
-    { label: '代理IP1', value: 'ip_1' },
-    { label: '代理IP2', value: 'ip_2' },
-    { label: '代理IP3', value: 'ip_3' },
-  ];
-
   // 表单校验规则
   const rules = {
-    remarks: {
-      required: true,
-      message: '备注不能为空',
-      trigger: ['blur', 'input'],
-    },
-    tags: {
-      required: true,
-      validator: (rule, value) => {
-        if (!value || value.length === 0) {
-          return new Error('请选择至少一个标签');
-        }
-        return true;
-      },
-      trigger: 'change',
-    },
-    group: {
-      required: true,
-      message: '请选择分组',
-      trigger: 'change',
-    },
-    proxyIp: {
-      required: true,
-      message: '请选择代理IP',
-      trigger: 'change',
-    },
-    accountVersion: {
-      required: true,
-      message: '请选择账号版本',
-      trigger: 'change',
-    },
-    keepOnline: {
-      required: true,
-      message: '请选择是否保持在线',
-      trigger: 'change',
-    },
-    files: {
-      required: true,
-      validator: (rule, value) => {
-        if (!value || value.length === 0) {
-          return new Error('请上传文件');
-        }
-        return true;
-      },
-      trigger: 'change',
-    },
+    remarks: requiredRule('备注不能为空', ['blur', 'input']),
+    tags: tagsRule,
+    group: requiredRule('请选择分组'),
+    proxyIp: requiredRule('请选择代理IP'),
+    accountVersion: requiredRule('请选择账号版本'),
+    keepOnline: keepOnlineRule,
+    files: filesRule,
   };
 
   const handleViewHistory = () => {
@@ -220,9 +169,6 @@
 
         message.success('表单验证通过，准备提交数据！');
         console.log('Form Data:', formValue);
-        // 在这里执行表单提交逻辑，例如调用API
-        // 提交成功后可以跳转回列表页或者关闭当前页面
-        // router.push('/org/dept');
       } else {
         console.log(errors);
         message.error('表单验证失败，请检查输入！');
@@ -231,7 +177,6 @@
   };
 
   const handleCancel = () => {
-    router.back(); // 返回上一页
+    router.back();
   };
 </script>
-

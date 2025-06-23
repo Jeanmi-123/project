@@ -1,7 +1,7 @@
 <template>
   <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">
-      <n-steps :current="1" class="mb-8 pl-[20%]" size="medium">
+      <n-steps :current="1" class="mb-8 pl-[25%]" size="medium">
         <n-step title="创建充值订单" />
         <n-step title="充值订单消息" />
       </n-steps>
@@ -60,16 +60,11 @@
 </template>
 
 <script lang="ts" setup>
-  import { ref, onMounted, inject } from 'vue';
+  import { ref, onMounted } from 'vue';
   import { useRouter } from 'vue-router';
-  import { useMessage } from 'naive-ui';
+
   import { useRechargeStore } from '@/store/modules/recharge';
-  import { SocketEnum } from '@/enums/socketEnum';
-  import { addOnMessage } from '@/utils/websocket';
 
-  const showQrModal = ref(false);
-
-  const message = useMessage();
   const rechargeStore = useRechargeStore();
 
   const formValue = ref({ amount: '' });
@@ -79,26 +74,6 @@
   const router = useRouter();
 
   onMounted(() => {});
-
-  const onMessageList = inject('onMessageList');
-
-  const handleMessageList = (res) => {
-    const data = JSON.parse(res.data);
-    if (data.event === SocketEnum.EventAdminOrderNotify) {
-      if (data.code == SocketEnum.CodeErr) {
-        message.error('查询出错:' + data.event);
-        return;
-      }
-
-      showQrModal.value = false;
-      message.success('支付成功');
-
-      location.reload();
-      return;
-    }
-  };
-
-  addOnMessage(onMessageList, handleMessageList);
 
   const nextStep = () => {
     rechargeStore.setAmount(formValue.value.amount);

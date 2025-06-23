@@ -4,11 +4,11 @@
     v-if="Number(amount) > 0"
   >
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">
-      <n-steps :current="2" class="mb-8 pl-[20%]" size="medium">
+      <n-steps :current="2" class="mb-8 pl-[25%]" size="medium">
         <n-step title="创建充值订单" />
         <n-step title="充值订单消息" />
       </n-steps>
-      <n-alert type="info" class="mb-6" show-icon>
+      <n-alert type="info" class="mb-6" show-icon closable>
         转账时请仔细确认地址和金额是否跟页面一致
       </n-alert>
       <div class="flex flex-col md:flex-row md:items-start md:gap-x-10 mb-6">
@@ -54,10 +54,12 @@
   import { ref, onMounted, onUnmounted } from 'vue';
   import { useRechargeStore } from '@/store/modules/recharge';
   import { useRouter } from 'vue-router';
+  import { useDialog } from 'naive-ui';
 
   const rechargeStore = useRechargeStore();
   const amount = ref(rechargeStore.amount);
   const router = useRouter();
+  const dialog = useDialog();
   // 页面销毁时清空金额
   onUnmounted(() => {
     rechargeStore.setAmount(0);
@@ -73,6 +75,16 @@
     if (seconds > 0) {
       seconds--;
       setTimeout(updateTimer, 1000);
+    } else {
+      dialog.warning({
+        closable: false,
+        title: '订单超时',
+        content: '订单已超时，请重新发起充值。',
+        positiveText: '知道了',
+        onPositiveClick: () => {
+          router.back();
+        },
+      });
     }
   };
   onMounted(() => {

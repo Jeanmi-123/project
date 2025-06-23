@@ -89,7 +89,7 @@
       </div>
 
       <!-- 数据表格 -->
-      <div class="mt-6">
+      <div class="mt-4">
         <BasicTable
           :openChecked="true"
           :columns="columns"
@@ -117,16 +117,7 @@
 
 <script lang="ts" setup>
   import { computed, h, reactive, ref } from 'vue';
-  import {
-    useDialog,
-    useMessage,
-    NTag,
-    NButton,
-    NSpace,
-    NTooltip,
-    NDropdown,
-    NIcon,
-  } from 'naive-ui';
+  import { useDialog, useMessage, NTag, NButton, NSpace, NTooltip, NIcon } from 'naive-ui';
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
   import {

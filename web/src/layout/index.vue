@@ -4,7 +4,6 @@
       v-if="
         !isMobile && isMixMenuNoneSub && (navMode === 'vertical' || navMode === 'horizontal-mix')
       "
-   
       @collapse="collapsed = true"
       :position="fixedMenu"
       @expand="collapsed = false"
@@ -51,7 +50,7 @@
           </div>
         </div>
       </n-layout-content>
-      <n-back-top :right="100" />
+      <n-back-top :right="20" />
     </n-layout>
   </n-layout>
 </template>

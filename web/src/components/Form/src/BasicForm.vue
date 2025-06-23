@@ -108,7 +108,6 @@
             v-if="getProps.showSubmitButton"
             v-bind="getSubmitBtnOptions"
             @click="handleSubmit"
-            :loading="loadingSub"
             >{{ getProps.submitButtonText }}</n-button
           >
           <n-button
