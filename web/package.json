@@ -10,7 +10,8 @@
   "private": true,
   "scripts": {
     "bootstrap": "pnpm install",
-    "serve": "pnpm run dev",
+    "serve:dev": "pnpm run dev",
+    "serve:prod": "pnpm run build:prod && vite preview",
     "dev": "vite",
     "build": "vite build && esno ./build/script/postBuild.ts",
     "build:no-cache": "pnpm clean:cache && pnpm run build",
@@ -26,7 +27,9 @@
     "lint:lint-staged": "lint-staged -c ./.husky/lintstagedrc.js",
     "lint:pretty": "pretty-quick --staged",
     "build typecheck": "vuedx-typecheck . && vite build",
-    "test prod gzip": "http-server dist --cors --gzip -c-1"
+    "test prod gzip": "http-server dist --cors --gzip -c-1",
+    "build:dev": "vite build --mode development",
+    "build:prod": "vite build --mode production"
   },
   "dependencies": {
     "@vicons/antd": "^0.12.0",
