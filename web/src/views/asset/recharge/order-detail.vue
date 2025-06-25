@@ -25,7 +25,7 @@
           </div>
           <div>
             <span class="font-medium text-gray-700">付款地址：</span>
-            <span class="font-mono break-all text-black">TJCHZioCc3HxFx41kGoJJhuCdirkFKr6Wo</span>
+            <span class="font-mono break-all ">TJCHZioCc3HxFx41kGoJJhuCdirkFKr6Wo</span>
           </div>
         </div>
         <div class="flex flex-col items-center mt-6 md:mt-0">

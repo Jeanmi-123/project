@@ -22,7 +22,7 @@
       <!--顶部右侧区域-->
       <slot name="toolbar"></slot>
       <!--刷新-->
-      <n-tooltip trigger="hover">
+      <!-- <n-tooltip trigger="hover">
         <template #trigger>
           <div class="table-toolbar-right-icon" @click="reload">
             <n-icon size="18">
@@ -31,7 +31,7 @@
           </div>
         </template>
         <span>刷新</span>
-      </n-tooltip>
+      </n-tooltip> -->
     </div>
   </div>
   <div class="s-table">

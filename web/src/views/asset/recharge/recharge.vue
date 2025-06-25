@@ -25,32 +25,31 @@
       >
         请选择和填写充值信息，创建充值订单后继续充值
       </n-alert>
-      <div class="mt-6">
-        <n-form :model="formValue" label-width="100" label-placement="left">
-          <n-form-item label="转账金额：" class="mb-4">
-            <n-input-group>
-              <n-input value="USDT" disabled class="w-20 font-bold text-gray-700 rounded-l-lg" />
-              <n-input-number
-                v-model:value="formValue.amount"
-                placeholder="输入转账金额"
-                class="w-56 rounded-r-lg"
-                :min="0"
-              />
-            </n-input-group>
-          </n-form-item>
-          <n-form-item>
-            <div class="w-full flex justify-center">
-              <n-button
-                type="primary"
-                @click="nextStep"
-                class="w-44 h-10 rounded-lg text-base font-medium shadow"
-                :disabled="!formValue.amount"
-                >下一步</n-button
-              >
-            </div>
-          </n-form-item>
-        </n-form>
-      </div>
+
+      <n-form :model="formValue" label-width="100" label-placement="left">
+        <n-form-item label="转账金额：" class="mb-4">
+          <n-input-group>
+            <n-input value="USDT" disabled class="w-20 font-bold text-gray-700 rounded-l-lg" />
+            <n-input-number
+              v-model:value="formValue.amount"
+              placeholder="输入转账金额"
+              class="w-56 rounded-r-lg"
+              :min="0"
+            />
+          </n-input-group>
+        </n-form-item>
+        <n-form-item>
+          <div class="w-full flex justify-center">
+            <n-button
+              type="primary"
+              @click="nextStep"
+              class="w-44 h-10 rounded-lg text-base font-medium shadow"
+              :disabled="!formValue.amount"
+              >下一步</n-button
+            >
+          </div>
+        </n-form-item>
+      </n-form>
     </n-card>
   </div>
 </template>

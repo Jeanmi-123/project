@@ -236,21 +236,27 @@ export function renderHtmlTooltip(content: string) {
 /**
  * 递归组装菜单格式
  */
-export function generatorMenu(routerMap: Array<any>) {
+export function generatorMenu(routerMap: Array<any>, level = 1) {
   return filterRouter(routerMap).map((item) => {
     const isRoot = isRootRouter(item);
     const info = isRoot ? item.children[0] : item;
+
+    // 只清空一级菜单的 label/title
+    if (level === 1 && info.meta.type === 1) {
+      info.meta.label = '';
+      info.meta.title = '';
+    }
     const currentMenu = {
       ...info,
       ...info.meta,
-      label: info.meta?.title,
+      // label: info.meta?.title,
       key: info.name,
       icon: isRoot ? item.meta?.icon : info.meta?.icon,
     };
     // 是否有子菜单，并递归处理
     if (info.children && info.children.length > 0) {
       // Recursion
-      currentMenu.children = generatorMenu(info.children);
+      currentMenu.children = generatorMenu(info.children, level + 1);
 
       // 当生成后子集为空，则删除子集空数组，否则加载时仍为目录格式！
       if (currentMenu.children.length === 0) {

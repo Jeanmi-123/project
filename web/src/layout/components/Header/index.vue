@@ -1,14 +1,17 @@
 <template>
-  <div class="layout-header">
-    <!--顶部菜单-->
-    <div
-      class="layout-header-left"
-      v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)"
-    >
+  <div class="layout-header flex items-center">
+    <!-- logo区 -->
+    <div class="layout-header-left flex items-center min-w-[180px]">
       <div class="logo" v-if="navMode === 'horizontal'">
         <img src="~@/assets/icons/superhero.svg" alt="" />
         <h2 v-show="!collapsed" class="title">{{ projectName }}</h2>
       </div>
+    </div>
+    <!-- 横向菜单区 -->
+    <div
+      v-if="navMode === 'horizontal' || (navMode === 'horizontal-mix' && mixMenu)"
+      class="flex-1 flex justify-center"
+    >
       <AsideMenu
         @update:collapsed="updateMenu"
         v-model:location="getMenuLocation"
@@ -70,7 +73,9 @@
     </div>
     <div class="layout-header-right">
       <!-- 用户余额展示 -->
-      <div class="flex items-center gap-2 mr-8 font-medium text-[14px] leading-6 whitespace-nowrap">
+      <div
+        class="flex items-center gap-2 mr-8 font-medium text-[14px] leading-6 whitespace-nowrap cursor-default"
+      >
         <span class="text-gray-500 dark:text-gray-300">用户余额：</span>
         <span class="font-bold text-blue-600 dark:text-blue-400">205.130 USDT</span>
         <span

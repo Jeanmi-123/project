@@ -94,20 +94,19 @@
         </n-button>
       </n-space>
       <!-- 数据表格 -->
-      <div class="mt-6">
-        <BasicTable
-          :columns="columns"
-          :request="loadDataTable"
-          :row-key="(row) => row.id"
-          :actionColumn="actionColumn"
-          :scroll-x="scrollX"
-          :resizeHeightOffset="-10000"
-          size="small"
-          :pagination="pagination"
-          ref="actionRef"
-          :openChecked="true"
-        />
-      </div>
+
+      <BasicTable
+        :columns="columns"
+        :request="loadDataTable"
+        :row-key="(row) => row.id"
+        :actionColumn="actionColumn"
+        :scroll-x="scrollX"
+        :resizeHeightOffset="-10000"
+        size="small"
+        :pagination="pagination"
+        ref="actionRef"
+        :openChecked="true"
+      />
     </n-card>
 
     <n-modal

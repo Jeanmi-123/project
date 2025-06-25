@@ -30,20 +30,19 @@
       </div>
 
       <!-- 数据表格 -->
-      <div class="mt-6">
-        <BasicTable
-          :openChecked="true"
-          :columns="columns"
-          :request="loadDataTable"
-          :pagination="pagination"
-          ref="actionRef"
-          :row-key="(row) => row.id"
-          :scroll-x="scrollX"
-          :resizeHeightOffset="-10000"
-          size="small"
-          :actionColumn="actionColumn"
-        />
-      </div>
+
+      <BasicTable
+        :openChecked="true"
+        :columns="columns"
+        :request="loadDataTable"
+        :pagination="pagination"
+        ref="actionRef"
+        :row-key="(row) => row.id"
+        :scroll-x="scrollX"
+        :resizeHeightOffset="-10000"
+        size="small"
+        :actionColumn="actionColumn"
+      />
     </n-card>
   </div>
 </template>

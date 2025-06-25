@@ -97,19 +97,18 @@
       </div>
 
       <!-- 数据表格 -->
-      <div class="mt-6">
-        <BasicTable
-          :openChecked="true"
-          :columns="columns"
-          :request="loadDataTable"
-          :row-key="(row) => row.id"
-          ref="actionRef"
-          :actionColumn="actionColumn"
-          :scroll-x="scrollX"
-          :resizeHeightOffset="-10000"
-          size="small"
-        />
-      </div>
+
+      <BasicTable
+        :openChecked="true"
+        :columns="columns"
+        :request="loadDataTable"
+        :row-key="(row) => row.id"
+        ref="actionRef"
+        :actionColumn="actionColumn"
+        :scroll-x="scrollX"
+        :resizeHeightOffset="-10000"
+        size="small"
+      />
     </n-card>
   </div>
 </template>

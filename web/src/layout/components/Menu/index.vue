@@ -173,3 +173,14 @@
     },
   });
 </script>
+
+<style scoped>
+  ::v-deep(.n-menu--horizontal) {
+    overflow-x: auto !important;
+    white-space: nowrap !important;
+    flex-wrap: nowrap !important;
+  }
+  ::v-deep(.n-menu-item) {
+    flex-shrink: 0 !important;
+  }
+</style>
