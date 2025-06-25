@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
+  <div class="min-h-screen flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="任务管理">
       <!-- 搜索表单 -->
       <div class="mb-6">
@@ -22,7 +22,7 @@
       </div>
 
       <!-- 批量操作区 -->
-      <div class="flex flex-wrap gap-2 justify-end mb-4 border-b pb-4">
+      <div class="flex flex-wrap gap-2 justify-end">
         <n-space>
           <n-button type="primary" @click="onCreateTask">新建任务</n-button>
           <n-button type="error" @click="onBatchDelete">批量删除</n-button>
@@ -38,20 +38,11 @@
           :pagination="pagination"
           ref="actionRef"
           :row-key="(row) => row.id"
-          :checked-row-keys="checkedIds"
-          @update:checked-row-keys="onCheckedRow"
           :scroll-x="scrollX"
           :resizeHeightOffset="-10000"
           size="small"
           :actionColumn="actionColumn"
-        >
-          <template #tableTitle>
-            <n-space>
-              <span>已选择 {{ checkedIds.length }} 项</span>
-              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
-            </n-space>
-          </template>
-        </BasicTable>
+        />
       </div>
     </n-card>
   </div>
@@ -63,9 +54,7 @@
   import { BasicTable, TableAction } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
   import { workplaceFilterFormSchemas } from './utils/workplaceForm';
-  import { useTableSelection } from '@/hooks/useTableSelection';
 
-  const { checkedIds, clearChecked, onCheckedRow } = useTableSelection<number>();
   const actionRef = ref();
   const scrollX = ref(1500);
 

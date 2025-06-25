@@ -1,17 +1,19 @@
 <template>
-  <NMenu
-    :options="menus"
-    :inverted="inverted"
-    :mode="mode"
-    :collapsed="collapsed"
-    :collapsed-width="64"
-    :collapsed-icon-size="20"
-    :indent="24"
-    :expanded-keys="openKeys"
-    :value="getSelectedKeys"
-    @update:value="clickMenuItem"
-    @update:expanded-keys="menuExpanded"
-  />
+  <div class="overflow-x-auto whitespace-nowrap">
+    <NMenu
+      :options="menus"
+      :inverted="inverted"
+      :mode="mode"
+      :collapsed="collapsed"
+      :collapsed-width="64"
+      :collapsed-icon-size="20"
+      :indent="24"
+      :expanded-keys="openKeys"
+      :value="getSelectedKeys"
+      @update:value="clickMenuItem"
+      @update:expanded-keys="menuExpanded"
+    />
+  </div>
 </template>
 
 <script lang="ts">

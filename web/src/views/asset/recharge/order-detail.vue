@@ -1,6 +1,6 @@
 <template>
   <div
-    class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2"
+    class="min-h-screen   flex flex-col items-center py-5 px-2"
     v-if="Number(amount) > 0"
   >
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">

@@ -70,21 +70,31 @@
     </div>
     <div class="layout-header-right">
       <!-- 用户余额展示 -->
-      <div class="user-balance-box">
-        <span class="balance-label">用户余额：</span>
-        <span class="balance-value">205.130 USDT</span>
-        <span class="balance-action" @click="goToRecharge">充值</span>
+      <div class="flex items-center gap-2 mr-8 font-medium text-[14px] leading-6 whitespace-nowrap">
+        <span class="text-gray-500 dark:text-gray-300">用户余额：</span>
+        <span class="font-bold text-blue-600 dark:text-blue-400">205.130 USDT</span>
+        <span
+          class="ml-2 cursor-pointer text-blue-600 dark:text-blue-400 hover:underline transition"
+          @click="goToRecharge"
+          >充值</span
+        >
       </div>
 
       <!-- 个人中心 -->
-      <div class="layout-header-trigger layout-header-trigger-min">
+      <div
+        class="layout-header-trigger layout-header-trigger-min h-auto w-auto px-0 whitespace-nowrap"
+      >
         <n-dropdown trigger="click" @select="avatarSelect" :options="avatarOptions" show-arrow>
-          <div class="avatar">
+          <div class="flex items-center gap-2 h-auto w-auto px-0">
             <n-avatar v-if="userStore.avatar" round :size="30" :src="userStore.avatar" />
-
-            <span class="username-display"
-              >{{ userStore.info?.username }}<br />{{ userStore?.info?.roleName }}</span
-            >
+            <div class="flex flex-col justify-center leading-tight">
+              <span class="text-sm text-gray-800 dark:text-gray-200 font-medium">
+                {{ userStore.info?.username }}
+              </span>
+              <span class="text-xs text-gray-500 dark:text-gray-400">
+                {{ userStore?.info?.roleName }}
+              </span>
+            </div>
           </div>
         </n-dropdown>
       </div>
@@ -428,7 +438,7 @@
         overflow: hidden;
         white-space: nowrap;
         padding-left: 10px;
-        min-width: 200px;
+        min-width: 132px;
 
         img {
           width: auto;
@@ -438,7 +448,6 @@
 
         .title {
           margin-bottom: 0;
-          min-width: 132px;
         }
       }
 
@@ -479,8 +488,8 @@
 
     &-trigger {
       display: inline-block;
-      width: 64px;
-      height: 64px;
+      min-width: 40px;
+      min-height: 40px;
       text-align: center;
       cursor: pointer;
       transition: all 0.2s ease-in-out;
@@ -488,8 +497,8 @@
       .n-icon {
         display: flex;
         align-items: center;
-        height: 64px;
-        line-height: 64px;
+        min-height: 40px;
+        line-height: 40px;
       }
 
       &:hover {
@@ -584,32 +593,5 @@
 
   :deep(sup) {
     top: 1.3em;
-  }
-
-  .user-balance-box {
-    display: flex;
-    align-items: center;
-    margin-right: 32px;
-    cursor: default;
-    font-weight: 500;
-    .balance-label {
-      color: #666;
-
-      margin-right: 4px;
-    }
-    .balance-value {
-      color: @primaryColor;
-      font-weight: bold;
-
-      margin-right: 18px;
-    }
-    .balance-action {
-      color: @primaryColor;
-      cursor: pointer;
-      transition: text-decoration 0.2s;
-      &:hover {
-        text-decoration: underline;
-      }
-    }
   }
 </style>

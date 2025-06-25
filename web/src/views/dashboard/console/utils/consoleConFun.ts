@@ -1,19 +1,13 @@
 import { useDialog, useMessage } from 'naive-ui';
+import { useRouter } from 'vue-router';
 
-export function useConsoleActions(actionRef, checkedIds) {
+export function useConsoleActions(actionRef) {
   const message = useMessage();
   const dialog = useDialog();
+  const router = useRouter();
 
   function reloadTable() {
     actionRef.value.reload();
-  }
-
-  function onCheckedRow(rowKeys) {
-    checkedIds.value = rowKeys;
-  }
-
-  function clearChecked() {
-    checkedIds.value = [];
   }
 
   function handleBatchDeleteFailed() {
@@ -33,36 +27,26 @@ export function useConsoleActions(actionRef, checkedIds) {
   }
 
   function handleDeleteSelected() {
-    if (checkedIds.value.length === 0) {
-      message.warning('请选择要删除的任务');
-      return;
-    }
-    dialog.warning({
-      title: '警告',
-      content: `您确定要删除选中的 ${checkedIds.value.length} 项任务吗？`,
-      positiveText: '确定',
-      negativeText: '取消',
-      onPositiveClick: () => {
-        message.success('删除成功');
-        checkedIds.value = [];
-        reloadTable();
-      },
-    });
+    message.info('删除选中');
   }
 
   function handleAction(action, record) {
     message.info(`执行操作: ${action} for ID: ${record.id}`);
   }
-
+  function handleBatchLogDetail() {
+    router.push({
+      path: '/apply/log/log',
+    });
+  }
   return {
     reloadTable,
-    onCheckedRow,
-    clearChecked,
+   
     handleBatchDeleteFailed,
     handlePullTask,
     handleRefreshTag,
     handleAutoPackage,
     handleDeleteSelected,
     handleAction,
+    handleBatchLogDetail,
   };
-} 
+}

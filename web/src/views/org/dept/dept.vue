@@ -1,10 +1,10 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-4 px-2">
+  <div class="min-h-screen py-4 px-2">
     <!-- 顶部横向卡片导航（有数字） -->
     <n-grid :cols="6" x-gap="16" y-gap="0" class="mb-4">
       <n-gi v-for="item in navCardList" :key="item.title">
         <div
-          class="bg-white rounded-lg shadow flex flex-col items-center justify-center py-3 min-h-[80px] transition-shadow hover:shadow-lg"
+          class="bg-[#18181c] rounded-lg shadow flex flex-col items-center justify-center py-3 min-h-[80px] transition-shadow hover:shadow-lg"
         >
           <div class="flex items-center gap-2 mb-2">
             <div :style="{ color: item.color }">
@@ -12,15 +12,15 @@
                 <component :is="item.icon" />
               </n-icon>
             </div>
-            <div class="text-base text-gray-600 font-medium">{{ item.title }}</div>
+            <div class="text-base font-medium">{{ item.title }}</div>
           </div>
-          <div class="text-lg font-bold text-gray-900">{{ item.value }}</div>
+          <div class="text-lg font-bold">{{ item.value }}</div>
         </div>
       </n-gi>
     </n-grid>
 
     <n-card
-      class="bg-white rounded-lg shadow mb-4"
+      class="rounded-lg shadow mb-4"
       :bordered="false"
       content-style="padding: 12px 12px 0 12px;"
     >
@@ -35,12 +35,7 @@
       </div>
 
       <!-- 操作按钮 -->
-      <n-space
-        justify="end"
-        size="small"
-        class="flex flex-wrap gap-2 mb-4 border-b pb-4"
-        style="margin-bottom: 1%"
-      >
+      <n-space justify="end" size="small" class="flex flex-wrap gap-2" style="margin-bottom: 1%">
         <n-button type="primary" size="medium">
           <template #icon>
             <n-icon>
@@ -98,9 +93,8 @@
           移除
         </n-button>
       </n-space>
-      <n-divider class="mb-3 mt-0" />
       <!-- 数据表格 -->
-      <div class="mt-4">
+      <div class="mt-6">
         <BasicTable
           :columns="columns"
           :request="loadDataTable"
@@ -112,16 +106,7 @@
           :pagination="pagination"
           ref="actionRef"
           :openChecked="true"
-          @update:checked-row-keys="onCheckedRow"
-          :checked-row-keys="checkedIds"
-        >
-          <template #tableTitle>
-            <n-space>
-              <span>已选择 {{ checkedIds.length }} 项</span>
-              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
-            </n-space>
-          </template></BasicTable
-        >
+        />
       </div>
     </n-card>
 
@@ -169,7 +154,6 @@
   } from '@vicons/antd';
   import { TableAction, BasicTable } from '@/components/Table';
   import { BasicForm, useForm } from '@/components/Form/index';
-  import { useTableSelection } from '@/hooks/useTableSelection';
   import { deptFilterFormSchemas } from './utils/deptForm';
   import { useDeptActions } from './utils/deptConFun';
 
@@ -427,9 +411,6 @@
     // 表单提交逻辑
   };
 
-  // 替换 checkedIds、clearChecked、onCheckedRow 的本地实现
-  const { checkedIds, clearChecked, onCheckedRow } = useTableSelection<number>();
-
   // 添加数据加载函数
   const loadDataTable = async (params) => {
     // 这里替换为实际的API调用
@@ -441,5 +422,4 @@
       total: tableData.length,
     };
   };
-
 </script>

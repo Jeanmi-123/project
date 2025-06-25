@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
+  <div class="min-h-screen flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="拉群任务">
       <!-- 搜索表单 -->
       <div class="mb-6">
@@ -16,7 +16,7 @@
       </div>
 
       <!-- 批量操作区 -->
-      <div class="flex flex-wrap gap-2 justify-end mb-4 border-b pb-4">
+      <div class="flex flex-wrap gap-2 justify-end">
         <n-space>
           <n-button type="warning" @click="handleBatchDeleteFailed">
             <template #icon>
@@ -68,6 +68,14 @@
             </template>
             导出群链接
           </n-button>
+          <n-button type="primary" @click="handleBatchLogDetail">
+            <template #icon>
+              <n-icon>
+                <ExportOutlined />
+              </n-icon>
+            </template>
+            日志详情
+          </n-button>
           <n-button type="default">
             <template #icon>
               <n-icon>
@@ -89,7 +97,7 @@
       </div>
 
       <!-- 数据表格 -->
-      <div class="mt-4">
+      <div class="mt-6">
         <BasicTable
           :openChecked="true"
           :columns="columns"
@@ -97,19 +105,10 @@
           :row-key="(row) => row.id"
           ref="actionRef"
           :actionColumn="actionColumn"
-          :checked-row-keys="checkedIds"
-          @update:checked-row-keys="onCheckedRow"
           :scroll-x="scrollX"
           :resizeHeightOffset="-10000"
           size="small"
-        >
-          <template #tableTitle>
-            <n-space>
-              <span>已选择 {{ checkedIds.length }} 项</span>
-              <n-button text type="primary" @click="clearChecked" class="ml-2">清空</n-button>
-            </n-space>
-          </template>
-        </BasicTable>
+        />
       </div>
     </n-card>
   </div>
@@ -131,23 +130,21 @@
   import { consoleFilterFormSchemas } from './utils/consoleForm';
 
   const actionRef = ref();
-  const checkedIds = ref<number[]>([]);
   const scrollX = ref(1500); // Placeholder for scrollX
-
   const {
     reloadTable,
-    onCheckedRow,
-    clearChecked,
+
     handleBatchDeleteFailed,
     handlePullTask,
     handleRefreshTag,
     handleAutoPackage,
     handleDeleteSelected,
     handleAction,
-  } = useConsoleActions(actionRef, checkedIds);
+    handleBatchLogDetail,
+  } = useConsoleActions(actionRef);
 
   const actionColumn = reactive({
-    width: 180,
+    width: 200,
     title: '操作',
     key: 'action',
     fixed: 'right',
@@ -155,8 +152,18 @@
       return h(TableAction as any, {
         style: 'button',
         actions: [
-          { label: '继续执行', onClick: () => handleAction('continue', record), type: 'info' },
-          { label: '结束任务', onClick: () => handleAction('end', record), type: 'error' },
+          {
+            label: '继续执行',
+            onClick: () => handleAction('continue', record),
+            type: 'info',
+            size: 'small',
+          },
+          {
+            label: '结束任务',
+            onClick: () => handleAction('end', record),
+            type: 'error',
+            size: 'small',
+          },
         ],
       });
     },

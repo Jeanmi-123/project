@@ -1,7 +1,7 @@
 <template>
-  <div class="min-h-screen bg-gray-50 py-3 px-2">
+  <div class="min-h-screen py-3 px-2">
     <n-card
-      class="bg-white rounded-lg shadow mb-3"
+      class="rounded-lg shadow mb-3"
       :bordered="false"
       title="账号编辑"
       content-style="padding: 24px 30px 0 30px;"
@@ -73,7 +73,7 @@
             class="w-full"
           >
             <n-upload-dragger
-              class="w-full h-52 border-2 border-dashed border-gray-300 rounded-lg bg-gray-50 hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 flex flex-col items-center justify-center"
+              class="w-full h-52 border-2 border-dashed border-gray-300 rounded-lg hover:border-blue-400 hover:bg-blue-50 transition-all duration-300 flex flex-col items-center justify-center"
             >
               <div class="mb-3 text-gray-400">
                 <n-icon size="48" :depth="3">

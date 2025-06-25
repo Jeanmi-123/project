@@ -1,7 +1,9 @@
+import { NInput, NSelect } from 'naive-ui';
+
 export const consoleFilterFormSchemas = [
   {
     field: 'id',
-    component: 'NInput',
+    component: NInput,
     label: 'ID',
     componentProps: {
       placeholder: '请输入ID',
@@ -9,7 +11,7 @@ export const consoleFilterFormSchemas = [
   },
   {
     field: 'taskName',
-    component: 'NInput',
+    component: NInput,
     label: '任务名',
     componentProps: {
       placeholder: '请输入任务名',
@@ -17,7 +19,7 @@ export const consoleFilterFormSchemas = [
   },
   {
     field: 'taskProgress',
-    component: 'NSelect',
+    component: NSelect,
     label: '任务进度',
     componentProps: {
       placeholder: '选择任务进度',
@@ -31,7 +33,7 @@ export const consoleFilterFormSchemas = [
   },
   {
     field: 'mergeStatus',
-    component: 'NSelect',
+    component: NSelect,
     label: '合并状态',
     componentProps: {
       placeholder: '选择合并状态',

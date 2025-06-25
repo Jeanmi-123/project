@@ -1,9 +1,7 @@
 <template>
-  <div class="history-list">
-    <n-card :bordered="false" title="历史导入记录" class="proCard">
-      <n-data-table :columns="columns" :data="data" :pagination="pagination" />
-    </n-card>
-  </div>
+  <n-card :bordered="false" title="历史导入记录" class="proCard">
+    <n-data-table :columns="columns" :data="data" :pagination="pagination" />
+  </n-card>
 </template>
 <script lang="ts" setup>
   import { ref } from 'vue';
@@ -157,8 +155,3 @@
 
   const pagination = { pageSize: 8 };
 </script>
-<style lang="less" scoped>
-  .history-list {
-    background-color: #f6f8fa;
-  }
-</style>

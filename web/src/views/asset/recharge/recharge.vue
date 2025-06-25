@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen bg-gray-50 flex flex-col items-center py-5 px-2">
+  <div class="min-h-screen flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="充值">
       <n-steps :current="1" class="mb-8 pl-[25%]" size="medium">
         <n-step title="创建充值订单" />
@@ -8,7 +8,7 @@
       <n-alert
         v-if="showAlert1"
         type="info"
-        class="mb-3 bg-purple-50 rounded text-base"
+        class="mb-3 rounded text-base"
         show-icon
         closable
         @close="showAlert1 = false"
@@ -18,7 +18,7 @@
       <n-alert
         v-if="showAlert2"
         type="info"
-        class="mb-6 bg-purple-50 rounded text-base"
+        class="mb-6 rounded text-base"
         show-icon
         closable
         @close="showAlert2 = false"
@@ -29,11 +29,7 @@
         <n-form :model="formValue" label-width="100" label-placement="left">
           <n-form-item label="转账金额：" class="mb-4">
             <n-input-group>
-              <n-input
-                value="USDT"
-                disabled
-                class="w-20 font-bold text-gray-700 bg-gray-100 rounded-l-lg"
-              />
+              <n-input value="USDT" disabled class="w-20 font-bold text-gray-700 rounded-l-lg" />
               <n-input-number
                 v-model:value="formValue.amount"
                 placeholder="输入转账金额"
