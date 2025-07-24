@@ -93,7 +93,7 @@
           <div class="flex items-center gap-2 h-auto w-auto px-0">
             <n-avatar v-if="userStore.avatar" round :size="30" :src="userStore.avatar" />
             <div class="flex flex-col justify-center leading-tight">
-              <span class="text-sm text-gray-800 dark:text-gray-200 font-medium">
+              <span class="text-sm text-gray-500 dark:text-gray-200 font-medium">
                 {{ userStore.info?.username }}
               </span>
               <span class="text-xs text-gray-500 dark:text-gray-400">

@@ -1,5 +1,5 @@
 <template>
-  <div class="min-h-screen  flex flex-col items-center py-5 px-2">
+  <div class="min-h-screen flex flex-col items-center py-5 px-2">
     <n-card :bordered="false" class="rounded-xl shadow" title="日志详情">
       <template #header-extra>
         <n-button @click="router.back()" type="default">返回</n-button>

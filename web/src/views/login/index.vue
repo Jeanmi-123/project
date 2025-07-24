@@ -57,8 +57,8 @@
       ? {}
       : {
           flex: `1`,
-          padding: `62px 12px`,
-          'max-width': `484px`,
+          padding: `100px 12px`,
+          'max-width': `500px`,
           'min-width': '320px',
           margin: '0 auto',
         };
@@ -78,14 +78,13 @@
     }
   });
 </script>
-
 <style lang="less" scoped>
   .view-account {
     display: flex;
     flex-direction: column;
     height: 100vh;
     overflow: auto;
-
+    background-color: black;
     &-top {
       padding: 32px 0;
       text-align: center;

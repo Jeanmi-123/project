@@ -19,11 +19,7 @@
       </n-gi>
     </n-grid>
 
-    <n-card
-      class="rounded-lg shadow mb-4"
-      :bordered="false"
-      content-style="padding: 12px 12px 0 12px;"
-    >
+    <n-card class="rounded-lg shadow" :bordered="false">
       <!-- 筛选表单 -->
       <div class="mb-4">
         <BasicForm
