@@ -46,7 +46,8 @@ export const asyncRoutes = [...routeModuleList];
 export const constantRouter: any[] = [LoginRoute, RootRoute, RedirectRoute];
 
 const router = createRouter({
-  history: createWebHashHistory(''),
+  // 添加基础路径配置，与VITE_PUBLIC_PATH保持一致
+  history: createWebHashHistory('/'),
   routes: constantRouter,
   strict: true,
   scrollBehavior: () => ({ left: 0, top: 0 }),

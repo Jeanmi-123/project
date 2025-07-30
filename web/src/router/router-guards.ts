@@ -69,18 +69,6 @@ export function createRouterGuards(router: Router) {
     const userInfo = await userStore.GetInfo();
     await userStore.LoadLoginConfig();
 
-    // 是否允许获取微信openid
-    if (userStore.allowWxOpenId()) {
-      let path = nextData.path;
-      if (path === LOGIN_PATH) {
-        path = PageEnum.BASE_HOME_REDIRECT;
-      }
-
-      const URI = getNowUrl() + '#' + path;
-      jump('/wechat/authorize', { type: 'openId', syncRedirect: URI });
-      return;
-    }
-
     await userStore.GetConfig();
     let routes = await asyncRouteStore.generateRoutes(userInfo);
 

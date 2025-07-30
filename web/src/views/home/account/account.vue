@@ -20,7 +20,6 @@
           <BasicSetting v-if="type === 1" />
           <SafetySetting v-if="type === 2" />
           <CashSetting v-if="type === 3" />
-          <ThirdBind v-if="type === 4" />
         </n-card>
       </n-grid-item>
     </n-grid>
@@ -31,7 +30,7 @@
   import BasicSetting from './BasicSetting.vue';
   import SafetySetting from './SafetySetting.vue';
   import CashSetting from './CashSetting.vue';
-  import ThirdBind from './ThirdBind.vue';
+
   import { useRouter } from 'vue-router';
   import { pushHashRouterParameter } from '@/utils/urlUtils';
 

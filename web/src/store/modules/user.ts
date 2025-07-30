@@ -18,7 +18,7 @@ import {
   logout,
   mobileLogin,
 } from '@/api/system/user';
-import { isWechatBrowser } from '@/utils/is';
+
 import { DeptTypeEnum } from '@/enums/deptEnum';
 const Storage = createStorage({ storage: localStorage });
 
@@ -236,17 +236,7 @@ export const useUserStore = defineStore({
           });
       });
     },
-    // 是否允许获取微信openid
-    allowWxOpenId(): boolean {
-      if (!isWechatBrowser()) {
-        return false;
-      }
 
-      if (this.loginConfig !== null && this.loginConfig.loginAutoOpenId !== 1) {
-        return false;
-      }
-      return this.info === null || this.info.openId === '';
-    },
     // 登出
     async logout() {
       try {
